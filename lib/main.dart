@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:vortex_mobile/auth_screen.dart';
+import 'package:vortex_mobile/bloc/auth/login/login_bloc.dart';
+import 'package:vortex_mobile/bloc/auth/register/register_bloc.dart';
+import 'package:vortex_mobile/bloc/repository.dart';
 import 'package:vortex_mobile/home_screen.dart';
 
 void main() async {
@@ -19,14 +23,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Vortex',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(),
-    );
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<LoginBloc>(
+              create: (_) => LoginBloc(authRepo: Repository())),
+          BlocProvider<RegisterBloc>(
+              create: (_) => RegisterBloc(authRepo: Repository()))
+        ],
+        child: MaterialApp(
+          title: 'Vortex',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: const MyHomePage(),
+        ));
   }
 }
 
@@ -38,7 +49,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var _id;
+  var _token;
 
   @override
   void initState() {
@@ -49,14 +60,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void initialization() async {
     await SpUtil.getInstance();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var id = prefs.getString('_id');
-    _id = id;
-    await Future.delayed(const Duration(seconds: 1));
+    var token = prefs.getString('_token');
+    _token = token;
+    await Future.delayed(const Duration(milliseconds: 500));
     FlutterNativeSplash.remove();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _id == null ? const AuthScreen() : const HomeScreen();
+    return _token == null ? const AuthScreen() : const HomeScreen();
   }
 }
