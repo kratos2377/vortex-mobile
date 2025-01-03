@@ -26,18 +26,46 @@ export default function TabLayout() {
           default: {},
         }),
       }}>
+
+        
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: '',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="explore"
+
+
+<Tabs.Screen
+        name="swap_screen"
         options={{
-          title: 'Explore',
+          title: '',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+
+<Tabs.Screen
+        name="qr_scanner"
+        options={{
+          title: '',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+
+<Tabs.Screen
+        name="portfolio_screen"
+        options={{
+          title: '',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile_screen"
+        options={{
+          title: '',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="profile.fill" color={color} />,
         }}
       />
     </Tabs>
