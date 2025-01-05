@@ -1,13 +1,14 @@
 import { StyleSheet, Image, Platform } from 'react-native';
-
+import * as React from "react"
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { HomeNavProps } from '../utils/HomeParamList';
 
-export default function PortfolioScreen() {
+export default function SwapScreen({ navigation, route }: HomeNavProps<'swap_screen'>) {
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -20,9 +21,9 @@ export default function PortfolioScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Portfolio Screen</ThemedText>
+        <ThemedText type="title">Swap Screen</ThemedText>
       </ThemedView>
-
+    
     </ParallaxScrollView>
   );
 }

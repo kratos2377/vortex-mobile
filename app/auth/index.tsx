@@ -3,11 +3,13 @@ import { useState } from "react"
 import {  SafeAreaView, TouchableOpacity } from "react-native"
 import { Box, Button, Icon, Input, SafeAreaBox, VStack , Text } from "react-native-ficus-ui"
 import { BorderlessButton } from "react-native-gesture-handler"
+import { AuthNavProps } from "../utils/AuthParamList"
+import React from "react"
 
 
 
-export default function LoginScreen()  {
-    const navigation = useNavigation()
+export default function LoginScreen({ navigation, route }: AuthNavProps<'index'>)  {
+   
     const [requestSent , setRequestSent] = useState(false)
     const [usernameoremail , setUsernameOrEmail] = useState("")
     const [password , setPassword] = useState("")
@@ -73,7 +75,7 @@ export default function LoginScreen()  {
         <VStack spacing={5} mt="10px" alignSelf="center">
               
         <Text>
-            Don't have an account?   <TouchableOpacity onPress={() => navigation.navigate('registration')}>
+            Don't have an account?   <TouchableOpacity onPress={() => navigation.replace('registration')}>
     <Text color="blue.500">Register</Text>
   </TouchableOpacity>
         </Text>
