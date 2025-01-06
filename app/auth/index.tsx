@@ -1,10 +1,11 @@
 import { useNavigation } from "expo-router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {  SafeAreaView, TouchableOpacity } from "react-native"
 import { Box, Button, Icon, Input, SafeAreaBox, VStack , Text } from "react-native-ficus-ui"
 import { BorderlessButton } from "react-native-gesture-handler"
 import { AuthNavProps } from "../utils/AuthParamList"
 import React from "react"
+import { useLogin } from "@/api/login_mutation"
 
 
 
@@ -13,18 +14,29 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'index'>
     const [requestSent , setRequestSent] = useState(false)
     const [usernameoremail , setUsernameOrEmail] = useState("")
     const [password , setPassword] = useState("")
-
+    const login = useLogin()
 
     const handleLoginCall = async () => {
         console.log("Handle Login Call")
 
         setRequestSent(true)
 
+        login.mutate({
+            usernameoremail: usernameoremail,
+            password: password
+          });
 
-        setTimeout(() => {
-            setRequestSent(false)
-        } , 3000)
+
     }
+
+
+    useEffect(() => {
+            console.log("LOGIN TANSTACK FN CALLED")
+
+            if(login.isSuccess) {
+                
+            }
+    } , [login])
 
 
     return (
@@ -75,7 +87,7 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'index'>
         <VStack spacing={5} mt="10px" alignSelf="center">
               
         <Text>
-            Don't have an account?   <TouchableOpacity onPress={() => navigation.replace('registration')}>
+            Don't have an account?   <TouchableOpacity disabled={requestSent} onPress={() => navigation.replace('registration')}>
     <Text color="blue.500">Register</Text>
   </TouchableOpacity>
         </Text>

@@ -19,6 +19,7 @@ import ProfileScreen from './home/profile_screen';
 import QRScannerScreen from './home/qr_scanner';
 import SwapScreen from './home/swap_screen';
 import MainScreen from './home/main_screen';
+import VerificationScreen from './auth/verification_screen';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -59,15 +60,16 @@ export default function BaseScreen() {
 
   
 
-  if(isLoginRequired) {
+  if(!isLoginRequired) {
     return (
         <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName='verification_screen'>
   
   
         
               <Stack.Screen name="index" component={LoginScreen} />
         <Stack.Screen name="registration"  component={Registration}/>
+        <Stack.Screen name="verification_screen"  component={VerificationScreen}/>
   
     
         </Stack.Navigator>
