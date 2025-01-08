@@ -1,0 +1,82 @@
+{
+    "Bitcoin": {
+        "asset_symbol": "BTC",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/bitcoin-btc-logo.png"
+    },
+    "Ethereum": {
+        "asset_symbol": "ETH",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/ethereum-eth-logo.png"
+    },
+    "Binance-Coin": {
+        "asset_symbol": "BNB",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/bnb-bnb-logo.png"
+    },
+    "Cardano": {
+        "asset_symbol": "ADA",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/cardano-ada-logo.png"
+    },
+    "Solana": {
+        "asset_symbol": "SOL",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/solana-sol-logo.png"
+    },
+    "Ripple": {
+        "asset_symbol": "XRP",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/xrp-xrp-logo.png"
+    },
+    "Polkadot": {
+        "asset_symbol": "DOT",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/polkadot-new-dot-logo.png"
+    },
+    "Dogecoin": {
+        "asset_symbol": "DOGE",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/dogecoin-doge-logo.png"
+    },
+    "Avalanche": {
+        "asset_symbol": "AVAX",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/avalanche-avax-logo.png"
+    },
+    "Chainlink": {
+        "asset_symbol": "LINK",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/chainlink-link-logo.png"
+    },
+    "Polygon": {
+        "asset_symbol": "MATIC",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/polygon-matic-logo.png"
+    },
+    "Litecoin": {
+        "asset_symbol": "LTC",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/litecoin-ltc-logo.png"
+    },
+    "Uniswap": {
+        "asset_symbol": "UNI",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/uniswap-uni-logo.png"
+    },
+    "Stellar": {
+        "asset_symbol": "XLM",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/stellar-xlm-logo.png"
+    },
+    "Cosmos": {
+        "asset_symbol": "ATOM",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/cosmos-atom-logo.png"
+    },
+    "Tron": {
+        "asset_symbol": "TRX",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/tron-trx-logo.png"
+    },
+    "Monero": {
+        "asset_symbol": "XMR",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/monero-xmr-logo.png"
+    },
+    "Filecoin": {
+        "asset_symbol": "FIL",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/filecoin-fil-logo.png"
+    },
+    "Hedera": {
+        "asset_symbol": "HBAR",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/hedera-hbar-logo.png"
+    },
+    "Vechain": {
+        "asset_symbol": "VET",
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/vechain-vet-logo.png"
+    }
+}

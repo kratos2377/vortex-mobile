@@ -12,7 +12,8 @@ const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
     const Tab = createBottomTabNavigator()
   return (
     <Tab.Navigator initialRouteName="home_screen" screenOptions={ { 
-        tabBarShowLabel: false
+        tabBarShowLabel: false,
+        headerShown: false
     }}>
     <Tab.Screen
       name="home_screen"

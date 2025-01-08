@@ -1,52 +1,129 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import React from 'react';
+import React, { createRef, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HomeNavProps } from '../utils/HomeParamList';
+import { Box, Select, Text , Option, useDisclosure, Button, Icon, Modal, ScrollBox, VStack, HStack, Image, Divider } from 'react-native-ficus-ui';
+import TokenList from '@/components/TokenList';
+
 
 export default function HomeScreen({ navigation, route }: HomeNavProps<'home_screen'>) {
+
+  const [selectValue, setSelectedValue] = useState("5m");
+  const selectRef = createRef();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: tokenModalisOpen, onOpen: tokenModalonOpen, onClose: tokenModalonClose } = useDisclosure();
+  const [token1 , setToken1] = useState("SOL")
+  const [token2 , setToken2] = useState("BTC")
+  const [token_number , setTokenNumber] = useState<1 | 2>(1)
+
+
+  // console.log("DATA IS")
+  // console.log(data)
+
   return (
     <SafeAreaView>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </SafeAreaView>
+
+        <Box maxH="100vh" maxW="100%" flexDirection="row" justifyContent="space-between">
+
+         <Button onPress={() => {
+          onOpen()
+         }}
+         
+         top={10}
+         left={10}
+         >
+                <Text>{token1}/{token2}</Text>
+         </Button>
+
+
+         <Button
+       maxH="100vh" maxW="100%"
+        colorScheme="blue"
+        onPress={() => {
+          if (selectRef.current) {
+            selectRef.current.open();
+          }
+        }}
+
+        top={10}
+        right={10}
+      >
+        {selectValue ? selectValue.toString() : 'Select Time'}
+      </Button>
+          
+        </Box>
+
+
+        <Select
+        onSelect={setSelectedValue}
+        ref={selectRef}
+        value={selectValue}
+        title="Choose Time"
+        mt="md"
+        pb="2xl"
+        message=""
+        data={["5m", "15m", "1hr", "4h"]}
+        renderItem={(item, index) => (
+          <Option value={item} py="md" px="xl">
+            <Text>{item}</Text>
+          </Option>
+        )}
+      />
+
+
+        <Modal isOpen={isOpen} style={{height: "50%" , width: "60%" , alignSelf: "center"}}>
+        <Button
+            h={20}
+            w={20}
+            position="relative"
+                 alignSelf="flex-end"
+          top={10}
+          right={10}
+          borderRadius="full"
+          colorScheme="gray"
+          onPress={() => {
+            onClose();
+          }}
+        >
+          <Icon color="white" name="close" />
+        </Button>
+          
+          <Box flexDirection="column" justifyContent="center"  h="100%">
+          <Text ml={10} mb={10}>
+            Choose Base Token:
+          </Text>
+            <Button colorScheme="teal" variant="ghost" full px={20} onPress={() => {
+              setTokenNumber(1)
+              tokenModalonOpen()
+            }}>
+          {token1}
+        </Button>
+
+
+        <Text ml={10} mb={10}>
+            Choose Quote Token:
+          </Text>
+
+        <Button colorScheme="teal" variant="ghost" full px={20} onPress={() => {
+            setTokenNumber(2)
+              tokenModalonOpen()
+            }}>
+          {token2}
+        </Button>
+          </Box>
+      </Modal>
+
+
+            <TokenList tokenModalisOpen={tokenModalisOpen} tokenModalonClose={tokenModalonClose} tokenModalonOpen={tokenModalonOpen}
+            token_number={token_number}
+            setToken1={setToken1}
+              setToken2={setToken2}
+            />
+
+
+
+        </SafeAreaView>
   );
 }
 

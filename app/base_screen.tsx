@@ -60,10 +60,10 @@ export default function BaseScreen() {
 
   
 
-  if(!isLoginRequired) {
+  if(isLoginRequired) {
     return (
         <NavigationContainer>
-        <Stack.Navigator initialRouteName='verification_screen'>
+        <Stack.Navigator initialRouteName='index'>
   
   
         
@@ -84,27 +84,9 @@ export default function BaseScreen() {
         headerShown: false
       }}>
 
-
-
         <MainStack.Screen name="main_screen" component={MainScreen}   options={{
         headerShown: false
       }}/>
-        <MainStack.Screen name="home_screen" component={HomeScreen}  options={{
-        headerShown: false
-      }} />
-        <MainStack.Screen name="portfolio_screen" component={PortfolioScreen} options={{
-        headerShown: false
-      }} />
-        <MainStack.Screen name="profile_screen" component={ProfileScreen} options={{
-        headerShown: false
-      }}  />
-        <MainStack.Screen name="qr_scanner" component={QRScannerScreen}  options={{
-        headerShown: false
-      }} />
-        <MainStack.Screen name="swap_screen" component={SwapScreen}  options={{
-        headerShown: false
-      }}/>
-
   
       </MainStack.Navigator>
       </NavigationContainer>
