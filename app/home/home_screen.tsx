@@ -1,11 +1,14 @@
 import { StyleSheet, Platform } from 'react-native';
 
-import React, { createRef, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HomeNavProps } from '../utils/HomeParamList';
-import { Box, Select, Text , Option, useDisclosure, Button, Icon, Modal, ScrollBox, VStack, HStack, Image, Divider } from 'react-native-ficus-ui';
+import { Box, Select, Text , Option, useDisclosure, Button, Icon, Modal, ScrollBox, VStack, HStack, Image, Divider, Spinner } from 'react-native-ficus-ui';
 import TokenList from '@/components/TokenList';
-
+import { useQuery } from '@tanstack/react-query';
+import { COINAPI_BASE_URL } from '@/api/constants';
+import { CandlestickChart } from 'react-native-wagmi-charts';
+import ohlcv_data from "@/data/sample_ohlcv_data.json"
 
 export default function HomeScreen({ navigation, route }: HomeNavProps<'home_screen'>) {
 
@@ -16,10 +19,73 @@ export default function HomeScreen({ navigation, route }: HomeNavProps<'home_scr
   const [token1 , setToken1] = useState("SOL")
   const [token2 , setToken2] = useState("BTC")
   const [token_number , setTokenNumber] = useState<1 | 2>(1)
+  const [candleChartData , setCandleChartData] = useState([])
 
 
-  // console.log("DATA IS")
-  // console.log(data)
+  const getPeriodID = (val: string) => {
+    switch (val) {
+      case "5m":
+        return "5MIN"
+      
+      case "15m":
+          return "15MIN"
+
+      case "1h":
+        return "1HRS"
+      
+      case "4h":
+        return "4HRS"
+
+      default:
+        return "5MIN"
+    }
+  }
+
+  const {data , isLoading , error , refetch} = useQuery({
+    queryKey: ['crypto_data' , token1 , token2 , selectValue],
+    queryFn: async () => {
+      let uri = COINAPI_BASE_URL + "/" + token1 + "/" + token2 + "/history?period_id=" + getPeriodID(selectValue)
+
+      const response = await fetch(uri, {
+        headers: {
+          "Accept": "application/json",
+          "X-CoinAPI-Key": "A9E2EC76-5E1C-401D-8AB3-8EA49E5C7C9A"
+        }
+      })
+
+
+      console.log("COINBASE API RESP IS")
+      console.log(response.body)
+     },
+     enabled: false
+  })
+
+  const makeCandleChartData = (chart_data) => {
+
+
+    let complete_new_data = Object.entries(chart_data).map(([ind , ele]) => {
+
+      let  timestampMs =  new Date(ele!.time_period_start).getTime()
+
+      return {
+        timestamp: timestampMs,
+        open: ele.rate_open,
+        high: ele.rate_high,
+        low: ele.rate_low,
+        close: ele.rate_close,
+      }
+    })
+
+    console.log("New data Data is")
+    console.log(complete_new_data)
+    setCandleChartData([...complete_new_data])
+
+  }
+
+  useEffect(() => {
+   makeCandleChartData(ohlcv_data)
+    refetch()
+  } , [])
 
   return (
     <SafeAreaView>
@@ -54,6 +120,18 @@ export default function HomeScreen({ navigation, route }: HomeNavProps<'home_scr
           
         </Box>
 
+        {
+          isLoading ?   <Box h="100%" w="100%" alignItems="center" >
+            <Spinner color="blue.500" size="lg" />
+          </Box> : <Box h="100vh" w="100vh">
+                <CandlestickChart.Provider data={candleChartData}>
+            <CandlestickChart>
+              <CandlestickChart.Candles />
+            </CandlestickChart>
+          </CandlestickChart.Provider>
+          </Box>
+        }
+
 
         <Select
         onSelect={setSelectedValue}
@@ -63,7 +141,7 @@ export default function HomeScreen({ navigation, route }: HomeNavProps<'home_scr
         mt="md"
         pb="2xl"
         message=""
-        data={["5m", "15m", "1hr", "4h"]}
+        data={["5m", "15m", "1h", "4h"]}
         renderItem={(item, index) => (
           <Option value={item} py="md" px="xl">
             <Text>{item}</Text>

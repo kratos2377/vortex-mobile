@@ -5,3 +5,8 @@ export const USER_REGISTRATION_ROUTE = "/registration"
 export const USER_SEND_EMAIL_ROUTE = "/send_email"
 export const USER_VERIFY_USER_ROUTE = "/verify_user"
 export const USER_VERIFY_TOKEN_ROUTE = "/verify_token"
+
+
+
+//COINAPI Constants
+export const COINAPI_BASE_URL = "https://rest.coinapi.io/v1/exchangerate"
