@@ -4,7 +4,7 @@ import { RouteProp } from "@react-navigation/native";
 export type HomeParamList = {
   main_screen: undefined;
   home_screen: undefined;
-  portfolio_screen: undefined;
+  gamebet_screen: undefined;
   profile_screen: undefined;
   qr_scanner: undefined;
   swap_screen: undefined;

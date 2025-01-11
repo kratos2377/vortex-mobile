@@ -1,40 +1,69 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-import * as React from "react"
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { View, Text, StyleSheet, SafeAreaView, Pressable, Platform, StatusBar, AppState } from "react-native";
+import  React, {useRef , useEffect} from "react"
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { HomeNavProps } from '../utils/HomeParamList';
+import { Overlay } from "@/components/Overlay";
 
 export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_scanner'>) {
+
+  const [permission, requestPermission] = useCameraPermissions();
+
+  const isPermissionGranted = Boolean(permission?.granted);
+
+  const qrLock = useRef(false);
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        qrLock.current = false;
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">QR Scanner Screen</ThemedText>
-      </ThemedView>
-   
-    </ParallaxScrollView>
+    <SafeAreaView style={StyleSheet.absoluteFillObject}>
+      {Platform.OS === "android" ? <StatusBar hidden /> : null}
+      <CameraView
+        style={StyleSheet.absoluteFillObject}
+        facing="back"
+        onBarcodeScanned={({ data }) => {
+          if (data && !qrLock.current) {
+            qrLock.current = true;
+            setTimeout(async () => {
+             // await Linking.openURL(data);
+            }, 500);
+          }
+        }}
+      />
+      <Overlay />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "black",
+    justifyContent: "space-around",
+    paddingVertical: 80,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  title: {
+    color: "white",
+    fontSize: 40,
+  },
+  buttonStyle: {
+    color: "#0E7AFE",
+    fontSize: 20,
+    textAlign: "center",
   },
 });

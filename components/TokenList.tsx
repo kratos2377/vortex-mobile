@@ -66,8 +66,6 @@ const TokenList = ({ tokenModalisOpen , tokenModalonOpen , tokenModalonClose , t
 
                         onPress={() => {
 
-                                console.log("PRESSING CHANGING TOKEN FUNC")
-                                console.log(token_number)
 
                          if(token_number === 1) {
                             setToken1(data.asset_symbol)

@@ -3,10 +3,10 @@ import React from 'react'
 import HomeScreen from './home_screen'
 import SwapScreen from './swap_screen'
 import QRScannerScreen from './qr_scanner'
-import PortfolioScreen from './portfolio_screen'
 import ProfileScreen from './profile_screen'
 import { HomeNavProps } from '../utils/HomeParamList'
-import { AntDesign, Entypo, MaterialCommunityIcons } from '@expo/vector-icons'
+import { AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import GameBetScreen from './gamebet_screen'
 
 const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
     const Tab = createBottomTabNavigator()
@@ -47,12 +47,12 @@ const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
       }}
     />
     <Tab.Screen
-      name="portfolio_screen"
-      component={PortfolioScreen}
+      name="gamebet_screen"
+      component={GameBetScreen}
       options={{
         tabBarIcon: ({ color, size }) => (
-          <Entypo
-            name="wallet"
+          <MaterialIcons
+            name="gamepad"
             color={color}
             size={26}
           />

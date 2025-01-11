@@ -42,9 +42,12 @@ export default function HomeScreen({ navigation, route }: HomeNavProps<'home_scr
   }
 
   const {data , isLoading , error , refetch} = useQuery({
-    queryKey: ['crypto_data' , token1 , token2 , selectValue],
+    queryKey: ['crypto_data'],
     queryFn: async () => {
       let uri = COINAPI_BASE_URL + "/" + token1 + "/" + token2 + "/history?period_id=" + getPeriodID(selectValue)
+
+      console.log("URI IS")
+      console.log(uri)
 
       const response = await fetch(uri, {
         headers: {
@@ -54,8 +57,16 @@ export default function HomeScreen({ navigation, route }: HomeNavProps<'home_scr
       })
 
 
-      console.log("COINBASE API RESP IS")
-      console.log(response.body)
+
+        if(response.status === 200) {
+          // console.log("MARKET DATA IS")
+          // console.log(await response.json())
+          let mk_data = await response.json();
+          makeCandleChartData(mk_data)
+
+        }  else {
+            console.log("some error occured")
+        }
      },
      enabled: false
   })
@@ -76,16 +87,14 @@ export default function HomeScreen({ navigation, route }: HomeNavProps<'home_scr
       }
     })
 
-    console.log("New data Data is")
-    console.log(complete_new_data)
-    setCandleChartData([...complete_new_data])
+    setCandleChartData([...complete_new_data.reverse()])
 
   }
 
   useEffect(() => {
-   makeCandleChartData(ohlcv_data)
+ //  makeCandleChartData(ohlcv_data)
     refetch()
-  } , [])
+  } , [selectValue , token1 , token2])
 
   return (
     <SafeAreaView>
@@ -123,11 +132,19 @@ export default function HomeScreen({ navigation, route }: HomeNavProps<'home_scr
         {
           isLoading ?   <Box h="100%" w="100%" alignItems="center" >
             <Spinner color="blue.500" size="lg" />
-          </Box> : <Box h="100vh" w="100vh">
-                <CandlestickChart.Provider data={candleChartData}>
+          </Box> : <Box h={100} maxW="100vh">
+                <CandlestickChart.Provider data={candleChartData} >
             <CandlestickChart>
               <CandlestickChart.Candles />
+              <CandlestickChart.Crosshair >
+              <CandlestickChart.Tooltip />
+                </CandlestickChart.Crosshair>
             </CandlestickChart>
+                  <CandlestickChart.PriceText type="open" />
+        <CandlestickChart.PriceText type="high" />
+        <CandlestickChart.PriceText type="low" />
+        <CandlestickChart.PriceText type="close" />
+        <CandlestickChart.DatetimeText />
           </CandlestickChart.Provider>
           </Box>
         }

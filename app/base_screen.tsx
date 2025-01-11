@@ -5,7 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
-
+import {ConnectionProvider} from "@solana/wallet-adapter-react"
 
 import { getUserTokenFromStorage } from '@/store/mmkv_store';
 import React from 'react';
@@ -14,12 +14,13 @@ import HomeScreen from './home/home_screen';
 import Registration from './auth/registration';
 import { AuthParamList } from './utils/AuthParamList';
 import { HomeParamList } from './utils/HomeParamList';
-import PortfolioScreen from './home/portfolio_screen';
+import GameBetScreen from './home/gamebet_screen';
 import ProfileScreen from './home/profile_screen';
 import QRScannerScreen from './home/qr_scanner';
 import SwapScreen from './home/swap_screen';
 import MainScreen from './home/main_screen';
 import VerificationScreen from './auth/verification_screen';
+import { DEVNET_ENDPOINT } from '@/rpc/constants';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -79,7 +80,9 @@ export default function BaseScreen() {
   }
 
   return (
-      <NavigationContainer>
+    <ConnectionProvider  config={{commitment: 'processed'}}
+    endpoint={DEVNET_ENDPOINT}>
+            <NavigationContainer>
       <MainStack.Navigator screenOptions={{
         headerShown: false
       }}>
@@ -90,6 +93,7 @@ export default function BaseScreen() {
   
       </MainStack.Navigator>
       </NavigationContainer>
+    </ConnectionProvider>
 
   );
 }

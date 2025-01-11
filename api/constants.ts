@@ -10,3 +10,6 @@ export const USER_VERIFY_TOKEN_ROUTE = "/verify_token"
 
 //COINAPI Constants
 export const COINAPI_BASE_URL = "https://rest.coinapi.io/v1/exchangerate"
+
+
+
