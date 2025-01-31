@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query"
 import { MESSIER_BASE_URL, USER_AUTH_ROUTE, USER_LOGIN_ROUTE, USER_REGISTRATION_ROUTE } from "./constants";
-import { save_user_details } from "@/store/mmkv_store";
-import { UserModel } from "@/store/models";
-import { useUserStore } from "@/store/user_state";
+import { save_user_details } from "../store/mmkv_store";
+import { UserModel } from "../store/models";
+import { useUserStore } from "../store/user_state";
 
 export interface RegistrationCredentials {
     username: string;

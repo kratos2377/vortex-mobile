@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import {ConnectionProvider} from "@solana/wallet-adapter-react"
 
-import { getUserTokenFromStorage } from '@/store/mmkv_store';
+import { getUserTokenFromStorage } from '../store/mmkv_store';
 import React from 'react';
 import LoginScreen from './auth/index';
 import HomeScreen from './home/home_screen';
@@ -20,7 +20,7 @@ import QRScannerScreen from './home/qr_scanner';
 import SwapScreen from './home/swap_screen';
 import MainScreen from './home/main_screen';
 import VerificationScreen from './auth/verification_screen';
-import { DEVNET_ENDPOINT } from '@/rpc/constants';
+import { DEVNET_ENDPOINT } from '../rpc/constants';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

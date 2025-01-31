@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Box, Select, Text , Option, useDisclosure, Button, Icon, Modal, ScrollBox, VStack, HStack, Image, Divider } from 'react-native-ficus-ui';
-import data from "@/data/crypto_coin.json"
+import data from "../data/crypto_coin.json"
 
 interface TokenListProps {
     tokenModalisOpen: boolean,

@@ -1,15 +1,12 @@
 import { StyleSheet, Image, Platform, SafeAreaView, ScrollView, View } from 'react-native';
 import  React , {useEffect, useState} from "react"
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import { HomeNavProps } from '../utils/HomeParamList';
-import { useUserStore } from '@/store/user_state';
+import { useUserStore } from '../../store/user_state';
 import { StatusBar } from 'expo-status-bar';
 import { Box, Button, Icon, IconButton, ScrollBox, Text, VStack } from 'react-native-ficus-ui';
 import useAuthorization from '../utils/useAuthorization';
-import AccountInfo from '@/components/AccountInfo';
-import SignInButton from '@/components/SignInButton';
+import AccountInfo from '../../components/AccountInfo';
+import SignInButton from '../../components/SignInButton';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
 

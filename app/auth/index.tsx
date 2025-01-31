@@ -5,7 +5,7 @@ import { Box, Button, Icon, Input, SafeAreaBox, VStack , Text } from "react-nati
 import { BorderlessButton } from "react-native-gesture-handler"
 import { AuthNavProps } from "../utils/AuthParamList"
 import React from "react"
-import { useLogin } from "@/api/login_mutation"
+import { useLogin } from "../../api/login_mutation"
 
 
 

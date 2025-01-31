@@ -1,4 +1,4 @@
-import { OTPInput } from '@/components/OTPInput'
+import { OTPInput } from '../../components/OTPInput'
 import { AuthNavProps } from '../utils/AuthParamList'
 import React, { RefObject, useRef, useState } from 'react'
 import { KeyboardAvoidingView, SafeAreaView, TextInput, TouchableWithoutFeedback, View } from 'react-native'

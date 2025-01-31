@@ -5,7 +5,7 @@ import {Button} from 'react-native-paper';
 import {useSWRConfig} from 'swr';
 
 import { SnackbarContext } from './SnackbarProvider';
-import useGuardedCallback from '@/app/utils/useGuardedCallback';
+import useGuardedCallback from '../app/utils/useGuardedCallback';
 
 type Props = Readonly<{
   children?: React.ReactNode;

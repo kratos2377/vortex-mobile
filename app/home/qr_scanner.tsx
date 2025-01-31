@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, SafeAreaView, Pressable, Platform, StatusBar, A
 import  React, {useRef , useEffect} from "react"
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { HomeNavProps } from '../utils/HomeParamList';
-import { Overlay } from "@/components/Overlay";
+import { Overlay } from "../../components/Overlay";
 
 export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_scanner'>) {
 

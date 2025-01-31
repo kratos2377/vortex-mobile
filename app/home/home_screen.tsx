@@ -4,11 +4,10 @@ import React, { createRef, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HomeNavProps } from '../utils/HomeParamList';
 import { Box, Select, Text , Option, useDisclosure, Button, Icon, Modal, ScrollBox, VStack, HStack, Image, Divider, Spinner } from 'react-native-ficus-ui';
-import TokenList from '@/components/TokenList';
+import TokenList from '../../components/TokenList';
 import { useQuery } from '@tanstack/react-query';
-import { COINAPI_BASE_URL } from '@/api/constants';
+import { COINAPI_BASE_URL } from '../../api/constants';
 import { CandlestickChart } from 'react-native-wagmi-charts';
-import ohlcv_data from "@/data/sample_ohlcv_data.json"
 
 export default function HomeScreen({ navigation, route }: HomeNavProps<'home_screen'>) {
 

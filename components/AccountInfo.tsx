@@ -1,4 +1,4 @@
-import { Account } from '@/app/utils/useAuthorization';
+import { Account } from '../app/utils/useAuthorization';
 import React, {Suspense, useMemo, useState} from 'react';
 import {
   ActivityIndicator,
