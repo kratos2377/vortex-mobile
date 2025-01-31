@@ -19,4 +19,4 @@ const webCrypto = typeof crypto !== "undefined" ? crypto : new Crypto();
   }
 })();
 
-import "expo-router/entry";
+import "./node_modules/expo/AppEntry.js";

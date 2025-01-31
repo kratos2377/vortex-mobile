@@ -44,7 +44,8 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
           }
         }}
       />
-      <Overlay />
+      {/* Disabling this as this does not work in web properly*/}
+      {/* <Overlay /> */}
     </SafeAreaView>
   );
 }

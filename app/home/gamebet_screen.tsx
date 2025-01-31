@@ -7,14 +7,18 @@ import { Box, Button, Icon, IconButton, ScrollBox, Text, VStack } from 'react-na
 import useAuthorization from '../utils/useAuthorization';
 import AccountInfo from '../../components/AccountInfo';
 import SignInButton from '../../components/SignInButton';
+import { Appbar } from 'react-native-paper';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
 
     const {user_details} = useUserStore()
     const [walletCount , setWalletCount] = useState(0)
+    const [currentWalletAddress , setCurrentWalletAddress] = useState("")
     const {accounts, onChangeAccount, selectedAccount} = useAuthorization();
     useEffect(() => {
 
+      // console.log("Selected Account is")
+      // console.log(selectedAccount)
       
 
     } , [])
@@ -22,33 +26,11 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
   return (
    <Box w="100%" h="100%">
 
-      <Box w="100%" flexDirection="row" justifyContent="space-between" p={5} mb={10}>
-
-        <Button 
-            suffix={
-              <Icon name="down" color="white" fontSize="xl" ml="sm" />
-            }
-        >
-          Address 
-        </Button>
-
-        <Box  alignSelf="flex-end" flexDirection="row" alignItems="center">
-
-          <Text fontSize={15}>Total sols: 34.32</Text>
-
-
-          <IconButton
-      icon={<Icon name="search1" />}
-      colorScheme="red"
-      variant="ghost"
-      full
-    />
-        </Box>
-        
-      </Box>
-
-
-      
+<Appbar.Header>
+    <Appbar.Content title={`${user_details.email}`} onPress={() => {}}/>
+    <Appbar.Action icon="wallet-plus-outline" onPress={() => {}} />
+  </Appbar.Header>
+     
 
             <ScrollBox>
             <VStack spacing="md">

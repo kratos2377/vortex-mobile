@@ -14,4 +14,6 @@ config.resolver.resolveRequest = (context, realModuleName, platform) => {
   return context.resolveRequest(context, realModuleName, platform);
 };
 
+config.resolver.extraNodeModules.crypto = require.resolve("expo-crypto");
+
 module.exports = config;

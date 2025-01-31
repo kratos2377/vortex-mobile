@@ -9,7 +9,7 @@ import {ConnectionProvider} from "@solana/wallet-adapter-react"
 
 import { getUserTokenFromStorage } from '../store/mmkv_store';
 import React from 'react';
-import LoginScreen from './auth/index';
+import LoginScreen from './auth/login';
 import HomeScreen from './home/home_screen';
 import Registration from './auth/registration';
 import { AuthParamList } from './utils/AuthParamList';
@@ -64,11 +64,11 @@ export default function BaseScreen() {
   if(isLoginRequired) {
     return (
         <NavigationContainer>
-        <Stack.Navigator initialRouteName='index'>
+        <Stack.Navigator initialRouteName='login'>
   
   
         
-              <Stack.Screen name="index" component={LoginScreen} />
+              <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="registration"  component={Registration}/>
         <Stack.Screen name="verification_screen"  component={VerificationScreen}/>
   
@@ -80,8 +80,7 @@ export default function BaseScreen() {
   }
 
   return (
-    <ConnectionProvider  config={{commitment: 'processed'}}
-    endpoint={DEVNET_ENDPOINT}>
+
             <NavigationContainer>
       <MainStack.Navigator screenOptions={{
         headerShown: false
@@ -93,7 +92,6 @@ export default function BaseScreen() {
   
       </MainStack.Navigator>
       </NavigationContainer>
-    </ConnectionProvider>
 
   );
 }
