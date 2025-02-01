@@ -17,6 +17,7 @@
   "dependencies": {
     "@expo/metro-runtime": "~4.0.0",
     "@expo/vector-icons": "^14.0.2",
+    "@raydium-io/raydium-sdk-v2": "^0.1.111-alpha",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "@shopify/react-native-skia": "1.5.4",

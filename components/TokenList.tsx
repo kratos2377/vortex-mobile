@@ -10,9 +10,11 @@ interface TokenListProps {
     token_number: 1 | 2,
     setToken1: React.Dispatch<React.SetStateAction<string>>,
     setToken2: React.Dispatch<React.SetStateAction<string>>,
+    setToken1Image: React.Dispatch<React.SetStateAction<string>>,
+    setToken2Image: React.Dispatch<React.SetStateAction<string>>,
 }
 
-const TokenList = ({ tokenModalisOpen , tokenModalonOpen , tokenModalonClose , token_number , setToken1 , setToken2 } : TokenListProps) => {
+const TokenList = ({ tokenModalisOpen , tokenModalonOpen , tokenModalonClose , token_number , setToken1 , setToken2 , setToken1Image , setToken2Image } : TokenListProps) => {
   return (
     <Modal isOpen={tokenModalisOpen} style={{height: "100%" , width: "100%" , alignSelf: "center"}}>
     <Button
@@ -69,9 +71,12 @@ const TokenList = ({ tokenModalisOpen , tokenModalonOpen , tokenModalonClose , t
 
                          if(token_number === 1) {
                             setToken1(data.asset_symbol)
+                            setToken1Image(data.asset_symbol_pic_url)
                             tokenModalonClose()
                          } else {
                             setToken2(data.asset_symbol)
+                            
+                            setToken2Image(data.asset_symbol_pic_url)
                             tokenModalonClose()
                          }
                         }}

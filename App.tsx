@@ -10,6 +10,7 @@ import { Buffer } from "buffer";
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { DEVNET_ENDPOINT } from './rpc/constants';
 import { createDefaultAddressSelector, createDefaultAuthorizationResultCache, createDefaultWalletNotFoundHandler, SolanaMobileWalletAdapter } from '@solana-mobile/wallet-adapter-mobile';
+import { PaperProvider } from 'react-native-paper';
 global.Buffer = Buffer;
 
 
@@ -55,7 +56,8 @@ export default function App() {
         <ConnectionProvider  config={{commitment: 'processed'}}
         endpoint={DEVNET_ENDPOINT}>
         <WalletProvider wallets={wallets}>
-        <FicusThemeProvider> 
+      <PaperProvider>
+      <FicusThemeProvider> 
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 
 
@@ -67,6 +69,7 @@ export default function App() {
     </ThemeProvider>
     
     </FicusThemeProvider>
+      </PaperProvider>
     </WalletProvider>
     </ConnectionProvider>
   );
