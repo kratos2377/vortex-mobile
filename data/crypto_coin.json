@@ -1,82 +1,122 @@
 {
     "Bitcoin": {
         "asset_symbol": "BTC",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/bitcoin-btc-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+        "solana_devnet_mint": "DfgCCEQv5V2Q5jEsuaPrXNYn7cgxAZbLcLEhqSGhXxK9",
+        "solana_mainnet_mint": "9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E"
     },
     "Ethereum": {
         "asset_symbol": "ETH",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/ethereum-eth-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+        "solana_devnet_mint": "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs",
+        "solana_mainnet_mint": "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs"
     },
     "Binance-Coin": {
         "asset_symbol": "BNB",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/bnb-bnb-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/bnb-bnb-logo.png",
+        "solana_devnet_mint": "8FU8kKtf5y82MqLL962fEXY9WEgbz3YHtZwNqiHefX81",
+        "solana_mainnet_mint": "9gP2kCy3wA1ctvYWQk75guqXuHfrEomqydHLtcTCqiLa"
     },
     "Cardano": {
         "asset_symbol": "ADA",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/cardano-ada-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/cardano-ada-logo.png",
+        "solana_devnet_mint": "BgxfHJDzm44T7XG68MYKx7YisTjZu73tVovyZSjJMpmw",
+        "solana_mainnet_mint": "FYpdBuyAHSbdaAyD1sKkxyLWbAP8uUW9h6uvdhK74ij1"
     },
     "Solana": {
         "asset_symbol": "SOL",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/solana-sol-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/solana-sol-logo.png",
+        "solana_devnet_mint": "So11111111111111111111111111111111111111112",
+        "solana_mainnet_mint": "So11111111111111111111111111111111111111112"
     },
     "Ripple": {
         "asset_symbol": "XRP",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/xrp-xrp-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/xrp-xrp-logo.png",
+        "solana_devnet_mint": "3Qj8VGcGaQvgE7emhGYRyxFpqJzCNsaQxV2JfGkVtwtG",
+        "solana_mainnet_mint": "HWxQAMH7uNqxWoJY37FkR4mtuXLwVYzxKJhVGXkxHUna"
     },
     "Polkadot": {
         "asset_symbol": "DOT",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/polkadot-new-dot-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/polkadot-new-dot-logo.png",
+        "solana_devnet_mint": "9FtxdeXbKsQ8xXZริ7Lว5QดK9Nง4ฟ2WกGถ3Rะ",
+        "solana_mainnet_mint": "E6UU5M1z4CvSAAF99d9wRoXsasWMEXZRExJUe3Yh2Qh1"
     },
     "Dogecoin": {
         "asset_symbol": "DOGE",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/dogecoin-doge-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/dogecoin-doge-logo.png",
+        "solana_devnet_mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+        "solana_mainnet_mint": "BQcdHdAQW1hczDbBi9hiegXAR7A98Q9jx3X3iBBBDiq4"
     },
     "Avalanche": {
         "asset_symbol": "AVAX",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/avalanche-avax-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/avalanche-avax-logo.png",
+        "solana_devnet_mint": "6J3wYhYvHtNQFE1HS3NYPGhPxkJ8vmFbRm5xwqvmUH9h",
+        "solana_mainnet_mint": "KUANeD8EQvwpT1W7QZDtDqctLEh2FfSTy5pThE9CogT"
     },
     "Chainlink": {
         "asset_symbol": "LINK",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/chainlink-link-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/chainlink-link-logo.png",
+        "solana_devnet_mint": "2wpTofQ8SkACrkZWrZDjXPitYa8AwWgX8AfxdeBRRVLX",
+        "solana_mainnet_mint": "2wpTofQ8SkACrkZWrZDjXPitYa8AwWgX8AfxdeBRRVLX"
     },
     "Polygon": {
         "asset_symbol": "MATIC",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/polygon-matic-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/polygon-matic-logo.png",
+        "solana_devnet_mint": "5QPEJ6gHaT2DnF9H7QMhD7seQxc7xQwpwKqt9h8qQhRY",
+        "solana_mainnet_mint": "Gz7VkD4O5tJVqgwpRyK3UhHDZZ7B3tX3Qz6S5Tc7VWpj"
     },
     "Litecoin": {
         "asset_symbol": "LTC",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/litecoin-ltc-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/litecoin-ltc-logo.png",
+        "solana_devnet_mint": "HWHvQhFmJB3NUcu1aihKmrKegfVxBEHzwVX6yZCKEsi1",
+        "solana_mainnet_mint": "HqB7uswoVg4suaQiDP3wjxob1G5WdZ144zhdStwMCq7e"
     },
     "Uniswap": {
         "asset_symbol": "UNI",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/uniswap-uni-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/uniswap-uni-logo.png",
+        "solana_devnet_mint": "9nEqaUcb16sQ3Tn1psbkWqyhPdLmfHWjKGymREjsAgTE",
+        "solana_mainnet_mint": "8FU8kKtf5y82MqLL962fEXY9WEgbz3YHtZwNqiHefX81"
     },
     "Stellar": {
         "asset_symbol": "XLM",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/stellar-xlm-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/stellar-xlm-logo.png",
+        "solana_devnet_mint": "GkNQ9hQM1DoTQy9i4HVzhCjtKh9A6uqr3J9jR5DGyNhQ",
+        "solana_mainnet_mint": "GkNQ9hQM1DoTQy9i4HVzhCjtKh9A6uqr3J9jR5DGyNhQ"
     },
     "Cosmos": {
         "asset_symbol": "ATOM",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/cosmos-atom-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/cosmos-atom-logo.png",
+        "solana_devnet_mint": "4wjPQJ6PrkC4dHhYghwJzGBVP78DkBzA2U3WvQpqUM2m",
+        "solana_mainnet_mint": "AtomWyUFwRzbKaBuvoJdokWF9zVVztmPKaWagYQP8vK5"
     },
     "Tron": {
         "asset_symbol": "TRX",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/tron-trx-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/tron-trx-logo.png",
+        "solana_devnet_mint": "HDY7fsN6AKvwGj6xqfEEJNj9j4YqN88kzFbwdUcGHzri",
+        "solana_mainnet_mint": "Bn113WT6rbdgwrm12UJtnmNqGqZjY4it2WoUQuQopFVn"
     },
     "Monero": {
         "asset_symbol": "XMR",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/monero-xmr-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/monero-xmr-logo.png",
+        "solana_devnet_mint": "B1aLAAe4vW8nSQCetXnYqJfRxzTjnbooczwkUJAr7yMS",
+        "solana_mainnet_mint": "EchesyfXePKdLtoiZSL8pBe8Myagyy8ZRqsACNCFGnvp"
     },
     "Filecoin": {
         "asset_symbol": "FIL",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/filecoin-fil-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/filecoin-fil-logo.png",
+        "solana_devnet_mint": "EchesyfXePKdLtoiZSL8pBe8Myagyy8ZRqsACNCFGnvp",
+        "solana_mainnet_mint": "DUX8YwG5yb4hJkYXFkd9pP5ve9fqTxWfGHZK7gvimB2Q"
     },
     "Hedera": {
         "asset_symbol": "HBAR",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/hedera-hbar-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/hedera-hbar-logo.png",
+        "solana_devnet_mint": "DUX8YwG5yb4hJkYXFkd9pP5ve9fqTxWfGHZK7gvimB2Q",
+        "solana_mainnet_mint": "HBB111SCo9jkCejsZfz8Ec179r6CC3tuMznJkFCAhN1n"
     },
     "Vechain": {
         "asset_symbol": "VET",
-        "asset_symbol_pic_url": "https://cryptologos.cc/logos/vechain-vet-logo.png"
+        "asset_symbol_pic_url": "https://cryptologos.cc/logos/vechain-vet-logo.png",
+        "solana_devnet_mint": "H5gczCNbrtso8BqHTUvVhwRdqmULLBureA1gZMzqwsGw",
+        "solana_mainnet_mint": "VeT1qusQGsL8wazk6nqJFK1ZcLpmY6jZhzv2rm8qunT"
     }
 }
