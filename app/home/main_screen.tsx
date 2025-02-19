@@ -15,24 +15,21 @@ const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
         tabBarShowLabel: false,
         headerShown: false
     }}>
-    <Tab.Screen
-      name="home_screen"
-      component={HomeScreen}
+
+<Tab.Screen
+      name="gamebet_screen"
+      component={GameBetScreen}
       options={{
         tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="hand-coin" color={color} size={26} />
+          <MaterialIcons
+            name="gamepad"
+            color={color}
+            size={26}
+          />
         )
       }}
     />
-    <Tab.Screen
-      name="swap_screen"
-      component={SwapScreen}
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <AntDesign name="swap" color={color} size={26} />
-        )
-      }}
-    />
+
     <Tab.Screen
       name="qr_scanner"
       component={QRScannerScreen}
@@ -46,19 +43,7 @@ const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
         )
       }}
     />
-    <Tab.Screen
-      name="gamebet_screen"
-      component={GameBetScreen}
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons
-            name="gamepad"
-            color={color}
-            size={26}
-          />
-        )
-      }}
-    />
+
 
 <Tab.Screen
       name="profile_screen"
