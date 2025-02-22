@@ -4,10 +4,10 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import 'react-native-reanimated';
+
 import {ConnectionProvider} from "@solana/wallet-adapter-react"
 
-import { getUserTokenFromStorage } from '../store/mmkv_store';
+import { getUserTokenFromStorage } from '../store/store';
 import React from 'react';
 import LoginScreen from './auth/login';
 import HomeScreen from './home/home_screen';

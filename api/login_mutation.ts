@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 import { MESSIER_BASE_URL, USER_AUTH_ROUTE, USER_LOGIN_ROUTE } from "./constants";
-import { save_user_details } from "../store/mmkv_store";
+import { save_user_details } from "../store/store";
 import { UserModel } from "../store/models";
 import { useUserStore } from "../store/user_state";
 

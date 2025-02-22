@@ -9,13 +9,23 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.vortex-mobile",
+      "infoPlist": {
+        "NSCameraUsageDescription": "[REASON]",
+        "NSMicrophoneUsageDescription": "[REASON]"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.anonymous.vortex_mobile"
     },
     "web": {
       "bundler": "metro",
@@ -23,6 +33,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "react-native-permissions",
       [
         "expo-splash-screen",
         {
@@ -39,7 +50,14 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
           "recordAudioAndroid": true
         }
-      ]
+      ],
+      {
+     
+        "iosPermissions": [
+          "Camera",
+          "Microphone"
+        ]
+      }
     ],
     "experiments": {
       "typedRoutes": true
