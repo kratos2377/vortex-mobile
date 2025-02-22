@@ -5,12 +5,6 @@ const path = require('path');
 const config = getDefaultConfig(__dirname);
 
 config.resolver.resolveRequest = (context, realModuleName, platform) => {
-  if (realModuleName === 'react-native-wagmi-charts') {
-    return {
-      filePath: path.resolve(__dirname, 'node_modules/react-native-wagmi-charts/lib/module/index.js'),
-      type: 'sourceFile',
-    };
-  }
   return context.resolveRequest(context, realModuleName, platform);
 };
 

@@ -1,5 +1,4 @@
 
-import {RESULTS} from 'react-native-permissions';
 
 export enum EPermissionTypes {
     CAMERA = 'camera',
@@ -8,7 +7,6 @@ export enum EPermissionTypes {
 
 export type TUsePermissionsReturnType = {
   isError?: boolean;
-  type: (typeof RESULTS)[keyof typeof RESULTS];
   errorMessage?: string;
 };
 
