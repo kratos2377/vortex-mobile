@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import React from 'react'
-import HomeScreen from './home_screen'
 import SwapScreen from './swap_screen'
 import QRScannerScreen from './qr_scanner'
 import ProfileScreen from './profile_screen'
@@ -11,7 +10,7 @@ import GameBetScreen from './gamebet_screen'
 const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
     const Tab = createBottomTabNavigator()
   return (
-    <Tab.Navigator initialRouteName="home_screen" screenOptions={ { 
+    <Tab.Navigator initialRouteName="gamebet_screen" screenOptions={ { 
         tabBarShowLabel: false,
         headerShown: false
     }}>

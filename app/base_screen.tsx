@@ -10,7 +10,6 @@ import {ConnectionProvider} from "@solana/wallet-adapter-react"
 import { getUserTokenFromStorage } from '../store/store';
 import React from 'react';
 import LoginScreen from './auth/login';
-import HomeScreen from './home/home_screen';
 import Registration from './auth/registration';
 import { AuthParamList } from './utils/AuthParamList';
 import { HomeParamList } from './utils/HomeParamList';
@@ -35,10 +34,10 @@ export default function BaseScreen() {
 
   const [isLoginRequired , setIsLoginRequired] = useState(false)
 
-  useEffect(() => {
+  useEffect( () => {
     if (loaded) {
 
-      let token =  getUserTokenFromStorage()
+      let token = getUserTokenFromStorage()
       console.log("Token recieved is")
       console.log(token)
       if(token === null || token === undefined || token === "") {
