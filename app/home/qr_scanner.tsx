@@ -99,10 +99,7 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
         );
       })}
       {cameraShown && (
-        <CameraScanner
-          setIsCameraShown={setCameraShown}
-          onReadCode={handleReadCode}
-        />
+        <CameraScanner/>
       )}
     </View>
   );

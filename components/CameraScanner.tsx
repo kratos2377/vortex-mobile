@@ -1,162 +1,68 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Alert, Modal, SafeAreaView, View} from 'react-native';
+import { useState, useEffect } from "react";
+import { Dimensions, Alert, Vibration } from "react-native";
+import { Camera, CameraView } from "expo-camera";
+import { router } from "expo-router";
+import * as Linking from "expo-linking";
+import React from "react";
 
-import {StyleSheet} from 'react-native';
-import {RNHoleView} from 'react-native-hole-view';
-import {
-  Camera,
-  CameraRuntimeError,
-  useCameraDevice,
-  useCodeScanner,
-} from 'react-native-vision-camera';
-import {useIsFocused} from '@react-navigation/native';
-import { getWindowHeight, getWindowWidth, isIos } from '@/helpers';
-import { useAppStateListener } from '@/hooks/useAppStateListener';
-import { ICameraScannerProps } from '@/types/camera_types';
 
-export const CameraScanner = ({
-  setIsCameraShown,
-  onReadCode,
-}: ICameraScannerProps) => {
-  const device = useCameraDevice('back');
-  const camera = useRef<Camera>(null);
-  const isFocused = useIsFocused();
-  const [isCameraInitialized, setIsCameraInitialized] = useState(isIos);
-  const [isActive, setIsActive] = useState(isIos);
-  const [flash, setFlash] = useState<'on' | 'off'>(isIos ? 'off' : 'on');
-  const {appState} = useAppStateListener();
-  const [codeScanned, setCodeScanned] = useState('');
+
+export const CameraScanner = () => {
+  const [hasCameraPermission, setCameraPermission] = useState<boolean | null>(
+    null
+  );
 
   useEffect(() => {
-    if (codeScanned) {
-      onReadCode(codeScanned);
-    }
-  }, [codeScanned, onReadCode]);
+    const requestPermissions = async () => {
+      const cameraPermission = await Camera.requestCameraPermissionsAsync();
 
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-
-    if (isCameraInitialized) {
-      timeout = setTimeout(() => {
-        setIsActive(true);
-        setFlash('off');
-      }, 1000);
-    }
-    setIsActive(false);
-    return () => {
-      clearTimeout(timeout);
+      setCameraPermission(cameraPermission.status === "granted");
+  
     };
-  }, [isCameraInitialized]);
 
-  const onInitialized = () => {
-    setIsCameraInitialized(true);
-  };
+    requestPermissions();
+  }, []);
 
-  const codeScanner = useCodeScanner({
-    codeTypes: ['qr'],
-    onCodeScanned: codes => {
-      if (codes.length > 0) {
-        if (codes[0].value) {
-          setIsActive(false);
-          setTimeout(() => setCodeScanned(codes[0]?.value), 500);
-        }
-      }
-      return;
-    },
-  });
-
-  const onCrossClick = () => {
-    setIsCameraShown(false);
-  };
-
-  const onError = (error: CameraRuntimeError) => {
-    Alert.alert('Error!', error.message);
-  };
-
-  if (device == null) {
-    Alert.alert('Error!', 'Camera could not be started');
-  }
-
-  if (isFocused && device) {
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        <Modal presentationStyle="fullScreen" animationType="slide">
-          <View style={[styles.cameraControls, {backgroundColor: undefined}]} />
-          <Camera
-            torch={flash}
-            onInitialized={onInitialized}
-            ref={camera}
-            onError={onError}
-            photo={false}
-            style={styles.fullScreenCamera}
-            device={device}
-            codeScanner={codeScanner}
-            isActive={
-              isActive &&
-              isFocused &&
-              appState === 'active' &&
-              isCameraInitialized
-            }
-          />
-          <RNHoleView
-            holes={[
-              {
-                x: getWindowWidth() * 0.1,
-                y: getWindowHeight() * 0.28,
-                width: getWindowWidth() * 0.8,
-                height: getWindowHeight() * 0.4,
-                borderRadius: 10,
+  useEffect(() => {
+    if (hasCameraPermission !== null ) {
+      // Check permissions and execute logic when both permissions are set
+      if (!hasCameraPermission) {
+        Alert.alert(
+          "Camera Permissions Required",
+          "You must grant access to your camera to scan QR codes",
+          [
+            { text: "Go to settings", onPress: goToSettings },
+            {
+              text: "Cancel",
+              onPress: () => {
+                router.dismissAll();
               },
-            ]}
-            style={[styles.rnholeView, styles.fullScreenCamera]}
-          />
-        </Modal>
-      </SafeAreaView>
+              style: "cancel",
+            },
+          ]
+        );
+      }
+    }
+  }, [hasCameraPermission]);
+
+  const handleBarCodeScanned = async ({ data }) => {
+    Vibration.vibrate();
+    console.log("data", data);
+  };
+
+  const goToSettings = () => {
+    Linking.openSettings();
+  };
+
+  if (hasCameraPermission) {
+    return (
+      <CameraView
+        onBarcodeScanned={handleBarCodeScanned}
+        barcodeScannerSettings={{
+          barcodeTypes: ["qr"],
+        }}
+        style={{ height: Dimensions.get("window").height }}
+      />
     );
   }
-};
-
-
-
-export const styles = StyleSheet.create({
-    safeArea: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-    },
-    camera: {
-      width: '100%',
-      height: 200,
-    },
-    fullScreenCamera: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      flex: 1,
-      zIndex: 100,
-    },
-    rnholeView: {
-      alignSelf: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    cameraControls: {
-      height: '10%',
-      top: 15,
-      position: 'absolute',
-      flexDirection: 'row',
-      width: '100%',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingHorizontal: 24,
-      zIndex: 1000,
-    },
-    icon: {
-      height: 45,
-      width: 45,
-      borderRadius: 45,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
+}
