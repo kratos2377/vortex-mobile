@@ -1,4 +1,4 @@
-import { Account } from '../app/utils/useAuthorization';
+
 import React, {Suspense, useMemo, useState} from 'react';
 import {
   ActivityIndicator,
@@ -17,8 +17,7 @@ import {
   } from 'react-native-paper';
 import DisconnectButton from './DisconnectButton';
 import AccountBalance from './AccountBalance';
-import { Icon } from 'react-native-ficus-ui';
-import FundAccountButton from './FundAccountButton';
+import { Account } from '@/utils/useAuthorization';
 
 
 type Props = Readonly<{
@@ -57,9 +56,9 @@ export default function AccountInfo({
         <Suspense fallback={<ActivityIndicator />}>
           <View style={styles.balanceRow}>
             <AccountBalance publicKey={selectedAccount.publicKey} />
-            <FundAccountButton publicKey={selectedAccount.publicKey}>
+            {/* <FundAccountButton publicKey={selectedAccount.publicKey}>
               Add Funds
-            </FundAccountButton>
+            </FundAccountButton> */}
           </View>
         </Suspense>
         <TouchableWithoutFeedback

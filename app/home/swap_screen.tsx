@@ -1,9 +1,8 @@
 import { StyleSheet, Platform, SafeAreaView } from 'react-native';
 import * as React from "react"
-import { HomeNavProps } from '../utils/HomeParamList';
 import { Avatar, Button, Card , Text, TextInput} from 'react-native-paper';
-import { Box, Button as FCButton, Icon, Image, useDisclosure } from 'react-native-ficus-ui';
 import TokenList from '@/components/TokenList';
+import { HomeNavProps } from '@/utils/HomeParamList';
 
 
 const RightContent = props => <Box mr={1}><Avatar.Icon {...props} icon="folder" /></Box>

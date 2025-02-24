@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, Alert, BackHandler} from 'react-native';
-import { HomeNavProps } from '../utils/HomeParamList';
 import { CameraScanner } from "@/components/CameraScanner";
 import {StyleSheet} from 'react-native';
 import { getShadowProps, goToSettings } from '@/helpers';
 import { EPermissionTypes, usePermissions } from '@/hooks/usePermissions';
+import { HomeNavProps } from '@/utils/HomeParamList';
 
 export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_scanner'>) {
 

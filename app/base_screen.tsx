@@ -1,18 +1,14 @@
 import { DarkTheme, DefaultTheme, NavigationContainer, ThemeProvider } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 
-import {ConnectionProvider} from "@solana/wallet-adapter-react"
 
 import { getUserTokenFromStorage } from '../store/store';
 import React from 'react';
 import LoginScreen from './auth/login';
 import Registration from './auth/registration';
-import { AuthParamList } from './utils/AuthParamList';
-import { HomeParamList } from './utils/HomeParamList';
 import GameBetScreen from './home/gamebet_screen';
 import ProfileScreen from './home/profile_screen';
 import QRScannerScreen from './home/qr_scanner';
@@ -20,9 +16,11 @@ import SwapScreen from './home/swap_screen';
 import MainScreen from './home/main_screen';
 import VerificationScreen from './auth/verification_screen';
 import { DEVNET_ENDPOINT } from '../rpc/constants';
+import { AuthParamList } from '@/utils/AuthParamList';
+import { HomeParamList } from '@/utils/HomeParamList';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 export default function BaseScreen() {
   const Stack = createNativeStackNavigator<AuthParamList>();
@@ -34,23 +32,28 @@ export default function BaseScreen() {
 
   const [isLoginRequired , setIsLoginRequired] = useState(false)
 
+
+  const handleGetUserTokenFromStorage = async () => {
+    let token = await getUserTokenFromStorage()
+    console.log("Token recieved is")
+    console.log(token)
+    if(token === null || token === undefined || token === "") {
+      console.log("Setting logging as true")
+      //Disabling for now
+      //setIsLoginRequired(true)
+    }
+
+  }
+
   useEffect( () => {
     if (loaded) {
 
-      let token = getUserTokenFromStorage()
-      console.log("Token recieved is")
-      console.log(token)
-      if(token === null || token === undefined || token === "") {
-        console.log("Setting logging as true")
-        //Disabling for now
-        //setIsLoginRequired(true)
-      }
+      handleGetUserTokenFromStorage()
 
-
-      setTimeout(() => {
+      // setTimeout(() => {
         
-      SplashScreen.hideAsync();
-      } , 1000)
+      // SplashScreen.hideAsync();
+      // } , 1000)
     }
   }, [loaded]);
 

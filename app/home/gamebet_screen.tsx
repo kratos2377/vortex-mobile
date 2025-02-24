@@ -1,20 +1,19 @@
 import { StyleSheet, Image, Platform, SafeAreaView, ScrollView, View } from 'react-native';
 import  React , {useEffect, useState} from "react"
-import { HomeNavProps } from '../utils/HomeParamList';
 import { useUserStore } from '../../store/user_state';
 import { StatusBar } from 'expo-status-bar';
-import { Box, Button, Icon, IconButton, ScrollBox, Text, VStack } from 'react-native-ficus-ui';
-import useAuthorization from '../utils/useAuthorization';
 import AccountInfo from '../../components/AccountInfo';
 import SignInButton from '../../components/SignInButton';
 import { Appbar } from 'react-native-paper';
+import { useAuthorization } from '@/utils/useAuthorization';
+import { HomeNavProps } from '@/utils/HomeParamList';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
 
     const {user_details} = useUserStore()
     const [walletCount , setWalletCount] = useState(0)
     const [currentWalletAddress , setCurrentWalletAddress] = useState("")
-    const {accounts, onChangeAccount, selectedAccount} = useAuthorization();
+    const {accounts, selectedAccount} = useAuthorization();
     useEffect(() => {
 
       // console.log("Selected Account is")
@@ -37,7 +36,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
             {accounts && selectedAccount ? (
           <AccountInfo
             accounts={accounts}
-            onChange={onChangeAccount}
+            onChange={() => {}}
             selectedAccount={selectedAccount}
           />
         ) : (

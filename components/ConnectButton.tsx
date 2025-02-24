@@ -1,5 +1,5 @@
-import useAuthorization from '../app/utils/useAuthorization';
-import useGuardedCallback from '../app/utils/useGuardedCallback';
+import { useAuthorization } from '@/utils/useAuthorization';
+import useGuardedCallback from '@/utils/useGuardedCallback';
 import {transact} from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
 import React, {ComponentProps, useState} from 'react';
 import {Button} from 'react-native-paper';

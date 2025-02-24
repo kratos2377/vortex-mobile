@@ -1,38 +1,39 @@
-import {useConnection} from '@solana/wallet-adapter-react';
+
+import { useConnection } from '@/utils/ConnectionProvider';
+import { useAuthorization } from '@/utils/useAuthorization';
 import {LAMPORTS_PER_SOL, PublicKey} from '@solana/web3.js';
+import { useQuery } from '@tanstack/react-query';
 import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Text} from "react-native-ficus-ui"
-import useSWR from 'swr';
 
 type Props = Readonly<{
   publicKey: PublicKey;
 }>;
 
+
+export function useGetBalance({ address }: { address: PublicKey }) {
+ 
+  const { connection } = useConnection();
+
+  return useQuery({
+    queryKey: ["get-balance", { endpoint: connection.rpcEndpoint, address }],
+    queryFn: () => connection.getBalance(address),
+  });
+}
+
 export default function AccountBalance({publicKey}: Props) {
+  const { selectedAccount } = useAuthorization();
   const {connection} = useConnection();
-  const balanceFetcher = useCallback(
-    async function ([_, selectedPublicKey]: [
-      'accountBalance',
-      PublicKey,
-    ]): Promise<number> {
-      return await connection.getBalance(selectedPublicKey);
-    },
-    [connection],
-  );
-  const {data: lamports} = useSWR(
-    ['accountBalance', publicKey],
-    balanceFetcher,
-    {
-      suspense: true,
-    },
-  );
+
+
+
+  const query = useGetBalance({ address: selectedAccount!.publicKey });
   const balance = useMemo(
     () =>
       new Intl.NumberFormat(undefined, {maximumFractionDigits: 1}).format(
-        (lamports || 0) / LAMPORTS_PER_SOL,
+        (query.data || 0) / LAMPORTS_PER_SOL,
       ),
-    [lamports],
+    [query.data],
   );
   return (
     <View style={styles.container}>

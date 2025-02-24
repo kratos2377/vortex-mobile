@@ -1,15 +1,13 @@
-import { useNavigation } from "expo-router"
 import { useEffect, useState } from "react"
 import {  SafeAreaView, TouchableOpacity } from "react-native"
 import { Box, Button, Icon, Input, SafeAreaBox, VStack , Text } from "react-native-ficus-ui"
-import { BorderlessButton } from "react-native-gesture-handler"
-import { AuthNavProps } from "../utils/AuthParamList"
 import React from "react"
 import { useLogin } from "../../api/login_mutation"
+import { AuthNavProps } from "@/utils/AuthParamList"
 
 
 
-export default function LoginScreen({ navigation, route }: AuthNavProps<'index'>)  {
+export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>)  {
    
     const [requestSent , setRequestSent] = useState(false)
     const [usernameoremail , setUsernameOrEmail] = useState("")

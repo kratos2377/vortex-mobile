@@ -1,4 +1,5 @@
-import { SnackbarContext } from '../../components/SnackbarProvider';
+
+import { SnackbarContext } from '@/components/SnackbarProvider';
 import {useCallback, useContext} from 'react';
 
 

@@ -3,9 +3,9 @@ import React from 'react'
 import SwapScreen from './swap_screen'
 import QRScannerScreen from './qr_scanner'
 import ProfileScreen from './profile_screen'
-import { HomeNavProps } from '../utils/HomeParamList'
 import { AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import GameBetScreen from './gamebet_screen'
+import { HomeNavProps } from '@/utils/HomeParamList'
 
 const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
     const Tab = createBottomTabNavigator()

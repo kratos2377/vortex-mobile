@@ -1,8 +1,7 @@
+import { AuthNavProps } from '@/utils/AuthParamList'
 import { OTPInput } from '../../components/OTPInput'
-import { AuthNavProps } from '../utils/AuthParamList'
 import React, { RefObject, useRef, useState } from 'react'
 import { KeyboardAvoidingView, SafeAreaView, TextInput, TouchableWithoutFeedback, View } from 'react-native'
-import { Box, SafeAreaBox , Text , Input , Button, Icon, TouchableOpacity, VStack, HStack } from 'react-native-ficus-ui'
 
 const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_screen'>) => {
 

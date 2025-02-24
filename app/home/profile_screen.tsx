@@ -1,8 +1,7 @@
 import { StyleSheet, Image, Platform, ScrollView, Dimensions } from 'react-native';
 import  React , {useEffect, useState} from "react"
-import { HomeNavProps } from '../utils/HomeParamList';
-import { Avatar, VStack, Box, Divider, Button, Text, Switch } from 'react-native-ficus-ui';
 import { useUserStore } from '../../store/user_state';
+import { HomeNavProps } from '@/utils/HomeParamList';
 
 export default function ProfileScreen({ navigation, route }: HomeNavProps<'profile_screen'>) {
 

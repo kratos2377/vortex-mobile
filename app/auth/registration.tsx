@@ -1,8 +1,6 @@
-import { useNavigation } from 'expo-router'
+import { AuthNavProps } from '@/utils/AuthParamList'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native'
-import { Box, SafeAreaBox , Text , Input , Button, Icon, TouchableOpacity, VStack, HStack } from 'react-native-ficus-ui'
-import { AuthNavProps } from '../utils/AuthParamList'
 
 export default function Registration({ navigation, route }: AuthNavProps<'registration'>) {
 
@@ -121,7 +119,7 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
       <VStack spacing={5}>
             
       <Text>
-          Already Have an account?   <TouchableOpacity onPress={() => navigation.replace('index')}>
+          Already Have an account?   <TouchableOpacity onPress={() => navigation.replace('login')}>
   <Text color="blue.500">Login</Text>
 </TouchableOpacity>
       </Text>
