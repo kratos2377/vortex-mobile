@@ -9,7 +9,6 @@ import { useAuthorization } from '@/utils/useAuthorization';
 import { HomeNavProps } from '@/utils/HomeParamList';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
-
     const {user_details} = useUserStore()
     const [walletCount , setWalletCount] = useState(0)
     const [currentWalletAddress , setCurrentWalletAddress] = useState("")
@@ -26,8 +25,17 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
    <SafeAreaView style={{width: "100%" , height:"100%"}}>
 
 <Appbar.Header>
-    <Appbar.Content title={`${user_details.email}`} onPress={() => {}}/>
-    <Appbar.Action icon="wallet-plus-outline" onPress={() => {}} />
+    <Appbar.Content title={selectedAccount ? `${selectedAccount.publicKey}` : "Select wallet"} onPress={() => {
+
+      if(selectedAccount !== undefined && selectedAccount !== null) {
+        console.log("Wallet key is")
+        console.log(selectedAccount.publicKey)
+      } 
+
+    }}/>
+    <Appbar.Action icon="wallet-plus-outline" onPress={() => {
+
+    }} />
   </Appbar.Header>
      
 
