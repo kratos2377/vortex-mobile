@@ -4,7 +4,7 @@ import { useUserStore } from '../../store/user_state';
 import { StatusBar } from 'expo-status-bar';
 import AccountInfo from '../../components/AccountInfo';
 import SignInButton from '../../components/SignInButton';
-import { Appbar } from 'react-native-paper';
+import { Appbar, Surface } from 'react-native-paper';
 import { useAuthorization } from '@/utils/useAuthorization';
 import { HomeNavProps } from '@/utils/HomeParamList';
 
@@ -23,7 +23,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
     } , [])
 
   return (
-   <Box w="100%" h="100%">
+   <SafeAreaView style={{width: "100%" , height:"100%"}}>
 
 <Appbar.Header>
     <Appbar.Content title={`${user_details.email}`} onPress={() => {}}/>
@@ -31,8 +31,8 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
   </Appbar.Header>
      
 
-            <ScrollBox>
-            <VStack spacing="md">
+            <ScrollView>
+            <Surface>
             {accounts && selectedAccount ? (
           <AccountInfo
             accounts={accounts}
@@ -46,11 +46,11 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
             </SignInButton>
           </View>
         )}
-            </VStack>
-            </ScrollBox>
+            </Surface>
+            </ScrollView>
         
 
-   </Box>
+   </SafeAreaView>
   );
 }
 

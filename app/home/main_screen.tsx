@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import React from 'react'
-import SwapScreen from './swap_screen'
 import QRScannerScreen from './qr_scanner'
 import ProfileScreen from './profile_screen'
 import { AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'

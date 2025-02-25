@@ -5,6 +5,7 @@ import {LAMPORTS_PER_SOL, PublicKey} from '@solana/web3.js';
 import { useQuery } from '@tanstack/react-query';
 import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {Text} from "react-native-paper"
 
 type Props = Readonly<{
   publicKey: PublicKey;

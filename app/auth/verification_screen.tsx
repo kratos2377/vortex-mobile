@@ -1,6 +1,7 @@
 import { AuthNavProps } from '@/utils/AuthParamList'
 import { OTPInput } from '../../components/OTPInput'
 import React, { RefObject, useRef, useState } from 'react'
+import {Surface, Text} from "react-native-paper"
 import { KeyboardAvoidingView, SafeAreaView, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 
 const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_screen'>) => {
@@ -48,21 +49,23 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
         backgroundColor: "linear-gradient(to left, #bdc3c7, #2c3e50)"
       }}>
     
-      <VStack
-        mx="5px"
-        p={10}
-        borderWidth={1}
-        borderColor="gray.200"
-        borderRadius="lg"
-        spacing="md"
-        bg="white"
+      <Surface
+        style={{
+          marginHorizontal: 5,
+          padding: 10,
+          borderWidth: 1,
+          borderColor: "gray.200",
+          borderRadius: 5,
+          backgroundColor: "white",
+        }}
       >
 
 <KeyboardAvoidingView>
         <TouchableWithoutFeedback>
-          <View className={"flex flex-col gap-y-4 p-4"}>
-            <View className={"flex flex-col items-center mb-4"}>
-              <Text className="mb-5 text-center text-2xl font-semibold text-white" mb="10px">
+          <View style={{flex: 1,  flexDirection: "column" , padding: 4}}>
+            <View style={{flex:1 , flexDirection: "column", marginBottom: 4, alignItems: "center"}}>
+              <Text style={{  marginBottom: 10 , textAlign: "center" , fontSize: 24, fontWeight: "600",
+                textDecorationColor: "white" }}>
                 Enter verification code. 
               </Text>
          
@@ -75,7 +78,7 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
             </View>
             </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
-      </VStack>
+      </Surface>
     
       </SafeAreaView>
   )

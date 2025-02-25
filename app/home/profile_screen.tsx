@@ -1,7 +1,9 @@
-import { StyleSheet, Image, Platform, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Image, Platform, ScrollView, Dimensions, SafeAreaView } from 'react-native';
 import  React , {useEffect, useState} from "react"
 import { useUserStore } from '../../store/user_state';
 import { HomeNavProps } from '@/utils/HomeParamList';
+import { Avatar, Button, Divider, Switch } from 'react-native-paper';
+import {Text} from "react-native-paper"
 
 export default function ProfileScreen({ navigation, route }: HomeNavProps<'profile_screen'>) {
 
@@ -20,52 +22,49 @@ useEffect(() => {
   return (
     <ScrollView>
 
-      <VStack spacing={20}/>
 
-    <Box h={imageDim} w="100%" alignItems="center" p={5}  m={10}>
-    <Avatar
-      name={`necromorph23`}
-      src={`https://robohash.org/necromorph23`}
-      h={imageDim}
-      w={imageDim}
+    <SafeAreaView style={{ height: imageDim,  width: "100%", alignItems: "center", padding: 5,  margin: 10}}>
+    <Avatar.Image
+      source={{uri: `https://robohash.org/necromorph23`}}
+      size={imageDim}
     />
       
-    </Box>
+    </SafeAreaView>
 
-    <Divider mt={10}/>
+    <Divider style={{marginTop: 10}}/>
 
-    <Button colorScheme="teal" variant="ghost" full m={5}>
+    <Button style={{margin: 5}} >
       Profile
     </Button>
 
     <Divider/>
 
-    <Button colorScheme="teal" variant="ghost" full m={5}>
+    <Button style={{margin: 5}} >
       Change Password
     </Button>
 
     <Divider/>
 
-    <Button colorScheme="teal" variant="ghost" full m={5}>
+    <Button style={{margin: 5}} >
       Add/Remove Wallet
     </Button>
 
 
     <Divider/>
 
-    <Box  m={5} flexDirection="row" alignSelf="center" > 
-    <Text color="teal" fontSize={15} fontWeight="bold" mr={5}>
+    <SafeAreaView  style={{margin: 5, flexDirection: "row", alignSelf: "center"}} > 
+    <Text  style={{fontSize: 15, fontWeight: "bold",  marginRight: 5}}>
         Change Theme
     </Text>
 
-    <Switch ml={5} on={on} onPress={() => toggle(!on)}  />
-      </Box>
+    <Switch style={{marginLeft: 5}} value={on} onValueChange={() => toggle(!on)}  />
+      </SafeAreaView>
 
 
     <Divider/>
 
 
-    <Button colorScheme="teal" variant="ghost" full m={5}>
+    <Button  style={{margin: 5}}>
      Logout 
     </Button>
    

@@ -14,7 +14,11 @@ export default function SignInButton(props: Props) {
       {...props}
       onPress={() => {
         transact(async wallet => {
-          await authorizeSessionWithSignIn(wallet);
+          await authorizeSessionWithSignIn(wallet , {
+            domain: "yourdomain.com",
+            statement: "Sign into Expo Template App",
+            uri: "https://yourdomain.com",
+          });
         });
       }}
     />

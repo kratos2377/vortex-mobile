@@ -6,7 +6,6 @@ export type HomeParamList = {
   gamebet_screen: undefined;
   profile_screen: undefined;
   qr_scanner: undefined;
-  swap_screen: undefined;
 };
 
 export type HomeNavProps<T extends keyof HomeParamList> = {

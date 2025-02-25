@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import {  SafeAreaView, TouchableOpacity } from "react-native"
-import { Box, Button, Icon, Input, SafeAreaBox, VStack , Text } from "react-native-ficus-ui"
 import React from "react"
 import { useLogin } from "../../api/login_mutation"
 import { AuthNavProps } from "@/utils/AuthParamList"
-
+import { Button, Surface, TextInput } from "react-native-paper"
+import {Text} from  "react-native-paper"
 
 
 export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>)  {
@@ -45,53 +45,55 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
             backgroundColor: "linear-gradient(to left, #bdc3c7, #2c3e50)"
           }}>
 
-            <VStack
-            mx="5px"
-              p={10}
-              borderWidth={1}
-              borderColor="gray.200"
-              borderRadius="lg"
-              spacing="md"
-              bg="white"
-              
+            <Surface
+              style={{
+                marginHorizontal: 5,
+                padding: 10,
+                borderWidth: 1,
+                borderColor: "gray.200",
+                borderRadius: 8,
+                backgroundColor: "white"
+              }}             
             >
-            <Box>
-            <Input
-            m="5px"
+            <SafeAreaView>
+            <TextInput
+            style={{
+            margin: 5,
+            borderColor: "blue.500"
+            }}
             placeholder="Username or Email"
-            focusBorderColor="blue.500"
             onChangeText={ (value) => setUsernameOrEmail(value)}
             value={usernameoremail}
             />
-            <Input
-            m="5px"
+            <TextInput
+            style={{
+              margin: 5,
+              borderColor: "blue.500"
+              }}
             placeholder="Password"
             secureTextEntry
-            focusBorderColor="blue.500"
             onChangeText={(value) => setPassword(value)}
             value={password}
             />
 
-        <Button mt="5px" colorScheme="blue" full isLoading={requestSent} 
-        suffix = {
-            <Icon name="rightcircle" color="white" fontSize="xl" ml="sm" />
-        }
-
+        <Button  style={{marginTop: 5}} loading={requestSent} 
+        icon="rightcircle"
+    
         onPress={handleLoginCall}
         >
             Login
         </Button>
 
-        <VStack spacing={5} mt="10px" alignSelf="center">
+        <Surface style={{ marginTop: 10 , alignSelf: "center"}}>
               
         <Text>
             Don't have an account?   <TouchableOpacity disabled={requestSent} onPress={() => navigation.replace('registration')}>
-    <Text color="blue.500">Register</Text>
+    <Text style={{color: "blue.500"}}>Register</Text>
   </TouchableOpacity>
         </Text>
-        </VStack>
-            </Box>
-            </VStack>
+        </Surface>
+            </SafeAreaView>
+            </Surface>
       </SafeAreaView>
     )
 }

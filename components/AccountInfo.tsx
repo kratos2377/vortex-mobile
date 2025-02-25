@@ -10,6 +10,7 @@ import {
 import {
     Button,
     Card,
+    Icon,
     Menu,
     Subheading,
     Surface,
@@ -69,7 +70,7 @@ export default function AccountInfo({
           }}>
           <View style={styles.labelRow}>
             <Icon
-              name="account-balance-wallet"
+              icon="account-balance-wallet"
               style={styles.labelIcon}
             />
             <Subheading numberOfLines={1} style={styles.keyRow}>

@@ -1,6 +1,9 @@
 import { AuthNavProps } from '@/utils/AuthParamList'
 import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native'
+import { SafeAreaView , StyleSheet, TouchableOpacity} from 'react-native'
+import { Button, Surface, TextInput } from 'react-native-paper'
+import {Text} from "react-native-paper"
+
 
 export default function Registration({ navigation, route }: AuthNavProps<'registration'>) {
 
@@ -33,19 +36,11 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
     backgroundColor: "linear-gradient(to left, #bdc3c7, #2c3e50)"
   }}>
 
-  <VStack
-    mx="5px"
-    p={10}
-    borderWidth={1}
-    borderColor="gray.200"
-    borderRadius="lg"
-    spacing="md"
-    bg="white"
-  >
-  <Box>
+<Surface style={styles.vstack} children={<></>}/>
+  <SafeAreaView>
 
 
-        <Box     
+        <SafeAreaView     
 
         style={{
                     flexDirection: 'row',
@@ -53,81 +48,90 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
                   }}>
 
 
-                    <Box maxW="60vh">
+                    <SafeAreaView style={{ maxWidth: "60%"}}>
 
-                    <Input
+                    <TextInput
                   placeholder="First Name"
-                  focusBorderColor="blue.500"
+                  
                   onChangeText={ (value) => setFirstName(value)}
                   value={first_name}
                   />
 
 
-                      </Box>
+                      </SafeAreaView>
 
-                    <Box maxW="60vh">
-                    <Input
+                    <SafeAreaView style={{maxWidth: "60%"}}>
+                    <TextInput
                   placeholder="Last Name"
-                  focusBorderColor="blue.500"
+                  
                   onChangeText={ (value) => setLastName(value)}
                   value={last_name}
                   />
 
-                    </Box>
-        </Box>
+                    </SafeAreaView>
+        </SafeAreaView>
 
-<Input
+<TextInput
           placeholder="Email"
-          focusBorderColor="blue.500"
+          
           onChangeText={ (value) => setEmail(value)}
           value={email}
           />
 
-          <Input
+          <TextInput
           placeholder="Username"
-          focusBorderColor="blue.500"
+          
           onChangeText={ (value) => setUsername(value)}
           value={username}
           />
-          <Input
+          <TextInput
           placeholder="Password"
           secureTextEntry
-          focusBorderColor="blue.500"
+          
           onChangeText={(value) => setPassword(value)}
           value={password}
           />
 
 
-    <Input
+    <TextInput
           placeholder="Confirm Password"
           secureTextEntry
-          focusBorderColor="blue.500"
+          
           onChangeText={(value) => setConfirmPassword(value)}
           value={confirmPassword}
           />
 
-      <Button colorScheme="blue" full isLoading={requestSent} 
-      suffix = {
-          <Icon name="rightcircle" color="white" fontSize="xl" ml="sm" />
-      }
-
-      onPress={handleRegistrationCall}
+      <Button  loading={requestSent} 
+      icon="rightcircle"
+        onPress={handleRegistrationCall}
       >
           Register
       </Button>
 
-      <VStack spacing={5}>
+    
             
       <Text>
           Already Have an account?   <TouchableOpacity onPress={() => navigation.replace('login')}>
-  <Text color="blue.500">Login</Text>
+  <Text style={{color: "blue.500"}}>Login</Text>
 </TouchableOpacity>
       </Text>
-      </VStack>
-          </Box>
-  </VStack>
+          </SafeAreaView>
 
   </SafeAreaView>
   )
 }
 
+
+
+const styles = StyleSheet.create({
+  vstack: {
+    marginHorizontal: 5,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#e0e0e0', // Equivalent to gray.200
+    borderRadius: 8, // 'lg' is typically around 8
+    gap: 10, // Equivalent to spacing="md"
+    backgroundColor: 'white',
+    elevation: 1,
+  },
+});
