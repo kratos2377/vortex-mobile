@@ -24,7 +24,9 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
     } , [])
 
 
-    const truncatePublickKeyString = async (pub_key: string) => {
+    const truncatePublickKeyString =  (pub_key: string) => {
+      console.log("PUBKEY RECEIVED IS")
+      console.log(pub_key)
       if (pub_key.length <= 10) {
         return pub_key;
       }
@@ -39,7 +41,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
    <SafeAreaView style={{width: "100%" , height:"100%"}}>
 
 <Appbar.Header>
-    <Appbar.Content title={selectedAccount ? `${truncatePublickKeyString(selectedAccount.publicKey.toString())}` : "Select wallet"} onPress={() => {
+    <Appbar.Content title={selectedAccount ? truncatePublickKeyString(selectedAccount.publicKey.toString()) : "Select wallet"} onPress={() => {
 
       if(selectedAccount !== undefined && selectedAccount !== null) {
         console.log("Wallet key is")
@@ -88,13 +90,28 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
             </ScrollView>
         
 
-            <PaperProvider>
       <Portal>
         <Modal visible={showInfoModal} onDismiss={() => {setShowInfoModal(false)}} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
-          <Text>Example Modal.  Click outside this area to dismiss.</Text>
+          <AccountInfo
+            accounts={accounts!}
+            onChange={() => {}}
+            selectedAccount={selectedAccount!}
+
+          />
         </Modal>
       </Portal>
-    </PaperProvider>
+
+
+      <Portal>
+        <Modal visible={false} onDismiss={() => {setShowInfoModal(false)}} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
+          <AccountInfo
+            accounts={accounts!}
+            onChange={() => {}}
+            selectedAccount={selectedAccount!}
+
+          />
+        </Modal>
+      </Portal>
 
    </SafeAreaView>
   );

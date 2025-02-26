@@ -45,9 +45,6 @@ useEffect(() => {
 
     <Divider/>
 
-    <Button style={{margin: 5}} >
-      Add/Remove Wallet
-    </Button>
 
 
     <Divider/>

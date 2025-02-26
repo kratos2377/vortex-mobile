@@ -21,11 +21,11 @@ import AccountBalance from './AccountBalance';
 import { Account } from '@/utils/useAuthorization';
 
 
-type Props = Readonly<{
+type Props = {
   accounts: Account[];
   onChange(nextSelectedAccount: Account): void;
   selectedAccount: Account;
-}>;
+};
 
 function getLabelFromAccount(account: Account) {
   const base58EncodedPublicKey = account.publicKey.toBase58();
@@ -78,7 +78,7 @@ export default function AccountInfo({
             </Subheading>
           </View>
         </TouchableWithoutFeedback>
-        {accounts.length > 1 ? (
+        {/* {accounts.length > 1 ? (
           <Menu
             anchor={
               <Button
@@ -109,7 +109,7 @@ export default function AccountInfo({
               );
             })}
           </Menu>
-        ) : null}
+        ) : null} */}
         {/* <DisconnectButton buttonColor={colors.error} mode="contained">
           Disconnect
         </DisconnectButton> */}

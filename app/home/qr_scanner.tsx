@@ -1,108 +1,83 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, Alert, BackHandler} from 'react-native';
+import {View, Text, TouchableOpacity, Alert, BackHandler, SafeAreaView, Vibration, Linking} from 'react-native';
 import { CameraScanner } from "@/components/CameraScanner";
 import {StyleSheet} from 'react-native';
 import { getShadowProps, goToSettings } from '@/helpers';
 import { EPermissionTypes, usePermissions } from '@/hooks/usePermissions';
 import { HomeNavProps } from '@/utils/HomeParamList';
+import { Camera, CameraType } from 'expo-camera';
 
 export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_scanner'>) {
+  const [type, setType] = useState(CameraType.back);
+  const [hasCameraPermission, setCameraPermission] = Camera.useCameraPermissions();
 
-  // const {askPermissions} = usePermissions(EPermissionTypes.CAMERA);
-  const [cameraShown, setCameraShown] = useState(false);
-  const [qrText, setQrText] = useState('');
+  // useEffect(() => {
+  //   const requestPermissions = async () => {
+  //     const cameraPermission = await Camera.requestCameraPermissionsAsync();
 
-  let items = [
-    {
-      id: 1,
-      title: 'QR code Scanner',
-    },
-  ];
+  //     setCameraPermission(cameraPermission.status === "granted");
+  //     console.log("CAMERA PERMISSION")
+  //     console.log(hasCameraPermission)
+  //   };
 
-  function handleBackButtonClick() {
-    if (cameraShown) {
-      setCameraShown(false);
-    }
-    return false;
-  }
+  //   requestPermissions();
+  // }, []);
 
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        'hardwareBackPress',
-        handleBackButtonClick,
-      );
-    };
-  }, []);
+    if (hasCameraPermission !== null ) {
+      // Check permissions and execute logic when both permissions are set
+      if (!hasCameraPermission.granted) {
+        Alert.alert(
+          "Camera Permissions Required",
+          "You must grant access to your camera to scan QR codes",
+          [
+            { text: "Go to settings", onPress: goToSettings },
+            {
+              text: "Cancel",
+              onPress: () => {
+                navigation.replace("gamebet_screen")
+              },
+              style: "cancel",
+            },
+          ]
+        );
+      } else {
+        console.log("CAMERA has camera PERMISSION")
+        console.log(hasCameraPermission)
+      }
+    }
+  }, [hasCameraPermission]);
 
-  const takePermissions = async () => {
-    setCameraShown(true);
-    // askPermissions()
-    //   .then(response => {
-    //     //permission given for camera
-    //     if (
-    //       response.type === RESULTS.LIMITED ||
-    //       response.type === RESULTS.GRANTED
-    //     ) {
-    //       setCameraShown(true);
-    //     }
-    //   })
-    //   .catch(error => {
-    //     if ('isError' in error && error.isError) {
-    //       Alert.alert(
-    //         error.errorMessage ||
-    //           'Something went wrong while taking camera permission',
-    //       );
-    //     }
-    //     if ('type' in error) {
-    //       if (error.type === RESULTS.UNAVAILABLE) {
-    //         Alert.alert('This feature is not supported on this device');
-    //       } else if (
-    //         error.type === RESULTS.BLOCKED ||
-    //         error.type === RESULTS.DENIED
-    //       ) {
-    //         Alert.alert(
-    //           'Permission Denied',
-    //           'Please give permission from settings to continue using camera.',
-    //           [
-    //             {
-    //               text: 'Cancel',
-    //               onPress: () => console.log('Cancel Pressed'),
-    //               style: 'cancel',
-    //             },
-    //             {text: 'Go To Settings', onPress: () => goToSettings()},
-    //           ],
-    //         );
-    //       }
-    //     }
-    //   });
+  const handleBarCodeScanned = async ({ data }: {data: string}) => {
+    Vibration.vibrate();
+    console.log("data", data);
   };
 
-  const handleReadCode = (value: string) => {
-    console.log(value);
-    setQrText(value);
-    setCameraShown(false);
+  const goToSettings = () => {
+    Linking.openSettings();
   };
+
+  function toggleCameraType() {
+    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+  }
+
+
+  if (hasCameraPermission?.granted) {
+    return (
+      <View style={styles.cameracontainer}>
+      <Camera style={styles.camera} type={type} onBarCodeScanned={handleBarCodeScanned}/>
+    </View>
+    );
+  }
+
 
   return (
-    <View style={styles.container}>
-      {items.map(eachItem => {
-        return (
-          <TouchableOpacity
-            onPress={takePermissions}
-            activeOpacity={0.5}
-            key={eachItem.id}
-            style={styles.itemContainer}>
-            <Text style={styles.itemText}>{eachItem.title}</Text>
-          </TouchableOpacity>
-        );
-      })}
-      {cameraShown && (
-        <CameraScanner/>
-      )}
-    </View>
-  );
+    <SafeAreaView>
+      <View>
+        <Text>Enable Camera Permissions to scan QR codes</Text>
+      </View>
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -123,5 +98,28 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 17,
     color: 'black',
+  },
+  cameracontainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    margin: 64,
+  },
+  button: {
+    flex: 1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });

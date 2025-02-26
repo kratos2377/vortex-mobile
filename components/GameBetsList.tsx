@@ -1,8 +1,8 @@
 import React from 'react'
-
+import {Text} from "react-native-paper"
 const GameBetsList = () => {
   return (
-    <div>GameBetsList</div>
+    <Text>GameBetsList</Text>
   )
 }
 
