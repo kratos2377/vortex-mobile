@@ -110,9 +110,9 @@ export default function AccountInfo({
             })}
           </Menu>
         ) : null}
-        <DisconnectButton buttonColor={colors.error} mode="contained">
+        {/* <DisconnectButton buttonColor={colors.error} mode="contained">
           Disconnect
-        </DisconnectButton>
+        </DisconnectButton> */}
       </Card.Content>
     </Surface>
   );

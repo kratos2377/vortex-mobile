@@ -4,15 +4,17 @@ import { useUserStore } from '../../store/user_state';
 import { StatusBar } from 'expo-status-bar';
 import AccountInfo from '../../components/AccountInfo';
 import SignInButton from '../../components/SignInButton';
-import { Appbar, Surface } from 'react-native-paper';
+import { Appbar, Modal, PaperProvider, Portal, Surface } from 'react-native-paper';
 import { useAuthorization } from '@/utils/useAuthorization';
 import { HomeNavProps } from '@/utils/HomeParamList';
+import GameBetsList from '@/components/GameBetsList';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
     const {user_details} = useUserStore()
     const [walletCount , setWalletCount] = useState(0)
     const [currentWalletAddress , setCurrentWalletAddress] = useState("")
-    const {accounts, selectedAccount} = useAuthorization();
+    const [showInfoModal , setShowInfoModal] = useState(false)
+    const {accounts, selectedAccount , authorizeSessionWithSignIn} = useAuthorization();
     useEffect(() => {
 
       // console.log("Selected Account is")
@@ -21,11 +23,23 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
 
     } , [])
 
+
+    const truncatePublickKeyString = async (pub_key: string) => {
+      if (pub_key.length <= 10) {
+        return pub_key;
+      }
+      
+      const firstFour = pub_key.substring(0, 4);
+      const lastFour = pub_key.substring(pub_key.length - 4);
+      
+      return `${firstFour}...${lastFour}`;
+    }
+
   return (
    <SafeAreaView style={{width: "100%" , height:"100%"}}>
 
 <Appbar.Header>
-    <Appbar.Content title={selectedAccount ? `${selectedAccount.publicKey}` : "Select wallet"} onPress={() => {
+    <Appbar.Content title={selectedAccount ? `${truncatePublickKeyString(selectedAccount.publicKey.toString())}` : "Select wallet"} onPress={() => {
 
       if(selectedAccount !== undefined && selectedAccount !== null) {
         console.log("Wallet key is")
@@ -33,20 +47,36 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
       } 
 
     }}/>
-    <Appbar.Action icon="wallet-plus-outline" onPress={() => {
 
-    }} />
+
+
+    {
+      accounts && selectedAccount ? (
+        <>
+        
+        <Appbar.Action icon="cancel" onPress={() => {
+            } } />
+            
+            <Appbar.Action icon="information-outline" onPress={() => {
+
+              setShowInfoModal(true)
+
+            } } />
+            
+            </> 
+      )  : <Appbar.Action icon="wallet-plus-outline" onPress={() => {
+
+      }} />
+    }
   </Appbar.Header>
      
 
             <ScrollView>
             <Surface>
             {accounts && selectedAccount ? (
-          <AccountInfo
-            accounts={accounts}
-            onChange={() => {}}
-            selectedAccount={selectedAccount}
-          />
+            
+                <GameBetsList/>
+
         ) : (
           <View style={styles.container}>
             <SignInButton mode="contained">
@@ -57,6 +87,14 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
             </Surface>
             </ScrollView>
         
+
+            <PaperProvider>
+      <Portal>
+        <Modal visible={showInfoModal} onDismiss={() => {setShowInfoModal(false)}} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
+          <Text>Example Modal.  Click outside this area to dismiss.</Text>
+        </Modal>
+      </Portal>
+    </PaperProvider>
 
    </SafeAreaView>
   );
