@@ -4,17 +4,23 @@ import { useUserStore } from '../../store/user_state';
 import { StatusBar } from 'expo-status-bar';
 import AccountInfo from '../../components/AccountInfo';
 import SignInButton from '../../components/SignInButton';
-import { Appbar, Modal, PaperProvider, Portal, Surface } from 'react-native-paper';
-import { useAuthorization } from '@/utils/useAuthorization';
+import { Appbar, Button, Menu, Modal, PaperProvider, Portal, Surface, useTheme , Text } from 'react-native-paper';
+import { Account, useAuthorization } from '@/utils/useAuthorization';
 import { HomeNavProps } from '@/utils/HomeParamList';
 import GameBetsList from '@/components/GameBetsList';
+import DisconnectButton from '@/components/DisconnectButton';
+import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
     const {user_details} = useUserStore()
+    const {colors} = useTheme();
     const [walletCount , setWalletCount] = useState(0)
     const [currentWalletAddress , setCurrentWalletAddress] = useState("")
     const [showInfoModal , setShowInfoModal] = useState(false)
-    const {accounts, selectedAccount , authorizeSessionWithSignIn} = useAuthorization();
+    const [showChangeAddressModal , setShowChangeAddressModal] = useState(false)
+    const [disconnectModal , setDisconnectModal] = useState(false)
+      const [menuVisible, setMenuVisible] = useState(false);
+    const {accounts, selectedAccount , authorizeSessionWithSignIn , deauthorizeSession} = useAuthorization();
     useEffect(() => {
 
       // console.log("Selected Account is")
@@ -37,6 +43,15 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
       return `${firstFour}...${lastFour}`;
     }
 
+    function getLabelFromAccount(account: Account) {
+      const base58EncodedPublicKey = account.publicKey.toBase58();
+      if (account.label) {
+        return `${account.label} (${base58EncodedPublicKey.slice(0, 8)})`;
+      } else {
+        return base58EncodedPublicKey;
+      }
+    }
+
   return (
    <SafeAreaView style={{width: "100%" , height:"100%"}}>
 
@@ -44,8 +59,9 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
     <Appbar.Content title={selectedAccount ? truncatePublickKeyString(selectedAccount.publicKey.toString()) : "Select wallet"} onPress={() => {
 
       if(selectedAccount !== undefined && selectedAccount !== null) {
-        console.log("Wallet key is")
-        console.log(selectedAccount.publicKey)
+
+      setShowChangeAddressModal(true)
+
       } 
 
     }}/>
@@ -57,6 +73,9 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
         <>
         
         <Appbar.Action icon="cancel" onPress={() => {
+
+          setDisconnectModal(true)
+
             } } />
             
             <Appbar.Action icon="information-outline" onPress={() => {
@@ -103,13 +122,63 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
 
 
       <Portal>
-        <Modal visible={false} onDismiss={() => {setShowInfoModal(false)}} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
-          <AccountInfo
-            accounts={accounts!}
-            onChange={() => {}}
-            selectedAccount={selectedAccount!}
+        <Modal visible={showChangeAddressModal} onDismiss={() => {setShowChangeAddressModal(false)}} contentContainerStyle={{backgroundColor: 'white', padding: 10}}>
 
-          />
+        <Menu
+            anchor={
+              <Button
+                onPress={() => setMenuVisible(true)}
+                style={styles.addressMenuTrigger}>
+                Change Address
+              </Button>
+            }
+            onDismiss={() => {
+              setMenuVisible(false);
+            }}
+            style={styles.addressMenu}
+            visible={menuVisible}>
+            {accounts!.map(account => {
+              const base58PublicKey = account.publicKey.toBase58();
+              return (
+                <Menu.Item
+                  disabled={account.address === selectedAccount!.address}
+                  style={styles.addressMenuItem}
+                  contentStyle={styles.addressMenuItem}
+                  onPress={() => {
+                    //onChange(account);
+                    setMenuVisible(false);
+                  }}
+                  key={base58PublicKey}
+                  title={getLabelFromAccount(account)}
+                />
+              );
+            })}
+          </Menu>
+
+        </Modal>
+      </Portal>
+
+
+      <Portal>
+        <Modal visible={disconnectModal} onDismiss={() => {setDisconnectModal(false)}} contentContainerStyle={{backgroundColor: 'white', padding: 10}}>
+
+            <View style={{marginBottom: 10}}>
+              <Text>Current Address is: {selectedAccount!.publicKey.toString()}</Text>
+            </View>
+
+
+            <Button
+            mode='contained'
+            buttonColor={colors.error}
+            onPress={() => {
+              transact(async (wallet) => {
+                await deauthorizeSession(wallet);
+              });
+            } }  >
+              Disconnect
+              </Button>
+
+
         </Modal>
       </Portal>
 
@@ -130,5 +199,30 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '100%',
+  },
+  addressMenu: {
+    end: 18,
+  },
+  addressMenuItem: {
+    maxWidth: '100%',
+  },
+  addressMenuTrigger: {
+    marginBottom: 12,
+  },
+  balanceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  labelIcon: {
+    marginRight: 4,
+    top: 4,
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  keyRow: {
+    marginBottom: 12,
   },
 });

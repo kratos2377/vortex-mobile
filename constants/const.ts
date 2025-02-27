@@ -1,11 +1,12 @@
 import { clusterApiUrl, PublicKey } from '@solana/web3.js'
-
+import vortex from "@/idl/vortex_contracts.json"
 export const SOLANA_HOST = clusterApiUrl('devnet')
 
 export const STABLE_POOL_PROGRAM_ID = new PublicKey(
   '8LuB5EV2Dif9kDx61Sca5HCtkHnR5txPzLpAVA34fMWm'
 )
 
+export const STABLE_POOL_IDL = vortex
 
 export const SOL_MINT_ADDRESS = new PublicKey("So11111111111111111111111111111111111111112")
 

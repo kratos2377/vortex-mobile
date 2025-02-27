@@ -57,9 +57,6 @@ export default function AccountInfo({
         <Suspense fallback={<ActivityIndicator />}>
           <View style={styles.balanceRow}>
             <AccountBalance publicKey={selectedAccount.publicKey} />
-            {/* <FundAccountButton publicKey={selectedAccount.publicKey}>
-              Add Funds
-            </FundAccountButton> */}
           </View>
         </Suspense>
         <TouchableWithoutFeedback
