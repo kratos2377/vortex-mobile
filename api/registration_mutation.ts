@@ -74,11 +74,13 @@ export const useRegistration = () => {
         },
 
         onSuccess: (data) => {
-            console.log('Registration successful:', data);
+            console.log('Login successful:', data);
+            return data
           },
           onError: (error) => {
             // Handle errors appropriately
-            console.error('Registration failed:', error);
+            console.error('Login failed:', error);
+            return {result: {success: false} , message: error}
           },
 
         

@@ -72,11 +72,14 @@ export const useLogin = () => {
 
         onSuccess: (data) => {
             console.log('Login successful:', data);
+            return data
           },
           onError: (error) => {
             // Handle errors appropriately
             console.error('Login failed:', error);
+            return {result: {success: false} , message: error}
           },
+
 
         
     })

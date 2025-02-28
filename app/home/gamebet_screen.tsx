@@ -10,6 +10,8 @@ import { HomeNavProps } from '@/utils/HomeParamList';
 import GameBetsList from '@/components/GameBetsList';
 import DisconnectButton from '@/components/DisconnectButton';
 import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
+import { GAME_BET_ROUTE, GET_USER_BETS_ROUTE, NEBULA_BASE_URL } from '@/api/constants';
+import { useQuery } from '@tanstack/react-query';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
     const {user_details} = useUserStore()
@@ -20,15 +22,31 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
     const [showChangeAddressModal , setShowChangeAddressModal] = useState(false)
     const [disconnectModal , setDisconnectModal] = useState(false)
       const [menuVisible, setMenuVisible] = useState(false);
+      const [pageNo , setPageNo] = useState(0)
     const {accounts, selectedAccount , authorizeSessionWithSignIn , deauthorizeSession} = useAuthorization();
-    useEffect(() => {
 
-      // console.log("Selected Account is")
-      // console.log(selectedAccount)
+
+    const fetchUserBets = async () => {
+      if(selectedAccount === null || selectedAccount === undefined) {
+        return []
+      }
+
+      const response = await fetch(NEBULA_BASE_URL + GAME_BET_ROUTE + GET_USER_BETS_ROUTE + "/" + user_details.id + "/" + 
+        selectedAccount!.publicKey.toString() + "/" + pageNo.toString() );
       
+      // Check if the request was successful
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      return response.json();
+    };
 
-    } , [])
-
+    const { isLoading, isError, data, error , refetch } = useQuery({
+      queryKey: ['game-bets' , pageNo , selectedAccount!.publicKey],
+      queryFn: fetchUserBets,
+    })
+  
 
     const truncatePublickKeyString =  (pub_key: string) => {
       console.log("PUBKEY RECEIVED IS")
@@ -51,6 +69,18 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
         return base58EncodedPublicKey;
       }
     }
+
+
+    
+
+    useEffect(() => {
+
+      if(selectedAccount !== undefined && selectedAccount !== null) {
+        refetch()
+      }
+      
+
+    } , [selectedAccount])
 
   return (
    <SafeAreaView style={{width: "100%" , height:"100%"}}>
