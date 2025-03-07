@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0829ac19-03e0-439f-a456-255924e8ccdd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/home/gamebet_screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/gamebet_screen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/home/profile_screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/profile_screen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/home/qr_scanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/qr_scanner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/AccountBalance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AccountBalance.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/AccountInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AccountInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/CameraScanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CameraScanner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/GameBetsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/GameBetsList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
-    </list>
+    <list default="true" id="0829ac19-03e0-439f-a456-255924e8ccdd" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

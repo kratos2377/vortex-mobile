@@ -1,5 +1,5 @@
-import { View, Text } from 'react-native'
-import React, { useCallback, useState } from 'react'
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, StatusBar, TextInput } from 'react-native'
+import React, { useCallback, useRef, useState } from 'react'
 import { AccountMeta, Connection, SYSVAR_RENT_PUBKEY, Transaction } from '@solana/web3.js';
 import { Program } from "@coral-xyz/anchor";
 import * as anchor from "@coral-xyz/anchor"
@@ -13,16 +13,52 @@ import { USDC_MINT_ADDRESS, VORTEX_WALLET_ADDRESS } from '@/constants/const';
 import { getGameAccountPublicKey, getGameVaultccountPublicKey, getPlayerBetAccountKey, getUserGameBetAccountKey, getVortexSignerKey, stringToBuffer, uint8ArrayToBuffer } from '@/rpc/pda';
 import { HomeNavProps } from '@/utils/HomeParamList';
 import { useUserStore } from '@/store/user_state';
+import { Appbar, Button } from 'react-native-paper';
 
 
 const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
 
     const {user_details} = useUserStore()
-    const {game_id  , user_betting_on , user_who_is_betting , is_player , is_replay} = route.params
+    const {game_id  , user_betting_on , user_who_is_betting , is_player , is_replay, bet_type} = route.params
     const { authorizeSession, selectedAccount } = useAuthorization();
     const [connection] = useState(
         () => new Connection("https://api.devnet.solana.com")
       );
+      const [amount, setAmount] = useState('');
+      const inputRef = useRef(null);
+    
+      const handleAmountChange = (text: string) => {
+        // Remove any non-numeric characters except the decimal point
+        const cleanedText = text.replace(/[^0-9.]/g, '');
+        
+        // Check if there's a decimal point
+        if (cleanedText.includes('.')) {
+          const parts = cleanedText.split('.');
+          
+          // Ensure there's only one decimal point
+          if (parts.length > 2) {
+            return;
+          }
+          
+          // Limit to 3 decimal places
+          if (parts[1] && parts[1].length > 3) {
+            return;
+          }
+        }
+        
+        setAmount(cleanedText);
+      };
+    
+      const handleStakePress = () => {
+        // Handle stake functionality here
+        console.log('Staking amount:', amount);
+        // Add your logic for processing the payment
+      };
+    
+      const handleBackPress = () => {
+        // Go back to previous screen
+        navigation.goBack();
+      };
     
       
 
@@ -283,10 +319,90 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
 
 
   return (
-    <View>
-      <Text>BetScreen</Text>
+    <View style={styles.container}>
+      <StatusBar backgroundColor="#6200ee" barStyle="light-content" />
+      
+      <Appbar.Header>
+        <Appbar.BackAction onPress={handleBackPress}/>
+      </Appbar.Header>
+      
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.contentContainer}
+      >
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>Enter Stake Amount</Text>
+          
+          <View style={styles.inputContainer}>
+            <TextInput
+              ref={inputRef}
+              style={styles.input}
+              value={amount}
+              onChangeText={handleAmountChange}
+              placeholder="0.000"
+              keyboardType="numeric"
+              textAlign="right"
+            />
+            <Text style={styles.currencySymbol}>USD</Text>
+          </View>
+          
+          <Button 
+            mode="contained" 
+            style={styles.stakeButton}
+            onPress={handleStakePress}
+          >
+            Stake
+          </Button>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   )
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  formContainer: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 30,
+    backgroundColor: 'white',
+    width: '100%',
+  },
+  input: {
+    flex: 1,
+    height: 50,
+    fontSize: 20,
+  },
+  currencySymbol: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingLeft: 8,
+  },
+  stakeButton: {
+    width: '100%',
+    paddingVertical: 8,
+  },
+});
 
 export default BetScreen
