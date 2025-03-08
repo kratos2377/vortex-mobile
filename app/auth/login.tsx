@@ -8,7 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
-  StatusBar
+  StatusBar,
+  Alert
 } from 'react-native';
 import { 
   TextInput, 
@@ -22,6 +23,9 @@ import {
 import React from "react"
 import { useLogin } from "../../api/login_mutation"
 import { AuthNavProps } from "@/utils/AuthParamList"
+import { save_user_details } from "@/store/store";
+import AlertMessage from "@/components/AlertMessage";
+import { useSendEmailMutation } from "@/api/send_email_mutation";
 
 
 
@@ -36,39 +40,106 @@ const theme = {
 
 
 export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>)  {
-   
+
+  const { fn } = route.params
     const [requestSent , setRequestSent] = useState(false)
     const [usernameoremail , setUsernameOrEmail] = useState("")
     const [password , setPassword] = useState("")
     const login = useLogin()
+    const sendEmail = useSendEmailMutation()
     const [isLoading, setIsLoading] = useState(false);
     const [usernameoremailError, setUsernameorEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [showPassword , setShowassword] = useState(false)
+    const [showAlert , setShowAlert] = useState(false)
+    const [message , setMessage] = useState("")
+    const [type , setType] = useState<"success" | "error">("success")
     const handleLoginCall = async () => {
         console.log("Handle Login Call")
 
         setRequestSent(true)
         setIsLoading(true)
 
-       let login_response = await login.mutate({
+  login.mutate({
             usernameoremail: usernameoremail,
             password: password
           });
 
 
+          if (login.error) {
+            setType("error")
+            setMessage("Some Error Occured")
+            setShowAlert(true)
 
-          // if (login_response.result.success) {
 
-          // } else {
+          } else {
+            if ( !login.data?.result.success) {
+              setType("error")
+              setMessage("Some Error Occured")
+              setShowAlert(true)
 
-          // }
+              setTimeout(() => {
+                setShowAlert(false)
+              } , 1000)
+
+            } else {
+
+    
+
+          //    await save_user_details(login.data.token , login.data.user.id)
+              if (!login.data.user.verified) {
+
+                sendEmail.mutate({
+                  to_email: login.data.user.email,
+                  id: login.data.user.id
+                })
+
+
+                if (sendEmail.error || !sendEmail.data?.result) {
+                  setType("error")
+                  setMessage("Some Error Occured while sending verification code")
+                  setShowAlert(true)
+
+                  setTimeout(() => {
+                    setShowAlert(false)
+                  } , 1000)
+    
+                } else {
+
+
+                  
+                  setType("success")
+                  setMessage("Login Successful! Redirecting to verification screen")
+                  setShowAlert(true)
+
+                  setTimeout(() => {
+                    setShowAlert(false)
+                    navigation.replace("verification_screen")
+                  } , 1000)
+  
+                }
+
+              
+              } else {
+
+                
+              setType("success")
+              setMessage("Login Successful!")
+              setShowAlert(true)
+
+                          setTimeout(() => {
+                  setShowAlert(false)
+                  fn()
+                } , 1000)
+
+
+              }
+            }
+          }
+         
           
-
-
           setRequestSent(false)
           setIsLoading(false)
-  
 
     }
 
@@ -98,6 +169,7 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
         Sign in to continue to your account
       </Paragraph>
 
+    {showAlert ?   <AlertMessage message={message} type={type}/> : <></>}
       <TextInput
         label="Username or email"
         value={usernameoremail}

@@ -9,13 +9,12 @@ import { getUserTokenFromStorage } from '../store/store';
 import React from 'react';
 import LoginScreen from './auth/login';
 import Registration from './auth/registration';
-import GameBetScreen from './home/gamebet_screen';
-import ProfileScreen from './home/profile_screen';
-import QRScannerScreen from './home/qr_scanner';
 import MainScreen from './home/main_screen';
 import VerificationScreen from './auth/verification_screen';
 import { AuthParamList } from '@/utils/AuthParamList';
 import { HomeParamList } from '@/utils/HomeParamList';
+import { useVerifyTokenMutation } from '@/api/verify_token_mutation';
+import { useUserStore } from '@/store/user_state';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();
@@ -29,8 +28,8 @@ export default function BaseScreen() {
   });
 
   const [isLoginRequired , setIsLoginRequired] = useState(false)
-
-
+  const verifyTokenMut = useVerifyTokenMutation()
+  const {updateUserDetails} = useUserStore()
   const handleGetUserTokenFromStorage = async () => {
     let token = await getUserTokenFromStorage()
     console.log("Token recieved is")
@@ -39,6 +38,26 @@ export default function BaseScreen() {
       console.log("Setting logging as true")
       //Disabling for now
       setIsLoginRequired(true)
+    } else {
+
+      verifyTokenMut.mutate({
+        token: token
+      })
+
+
+      if (verifyTokenMut.error || !verifyTokenMut.data?.result) {
+        setIsLoginRequired(true)
+      } else {
+
+        if (verifyTokenMut.data.user_data.verified) {
+
+          updateUserDetails(verifyTokenMut.data.user_data)
+        } else {
+          setIsLoginRequired(true)
+        }
+
+      }
+
     }
 
   }
@@ -72,13 +91,18 @@ export default function BaseScreen() {
         
               <Stack.Screen name="login" component={LoginScreen} options={{
         headerShown: false
-      }}/>
+      }}
+      initialParams={{ fn: handleGetUserTokenFromStorage }}
+      />
         <Stack.Screen name="registration"  component={Registration} options={{
         headerShown: false
       }}/>
         <Stack.Screen name="verification_screen"  component={VerificationScreen} options={{
         headerShown: false
-      }}/>
+      }}
+      
+      initialParams={{ fn: handleGetUserTokenFromStorage }}
+      />
   
     
         </Stack.Navigator>
