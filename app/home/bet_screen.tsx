@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, StatusBar, TextInput } from 'react-native'
-import React, { useCallback, useRef, useState } from 'react'
-import { AccountMeta, Connection, SYSVAR_RENT_PUBKEY, Transaction } from '@solana/web3.js';
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, StatusBar, TextInput, ActivityIndicator } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { AccountMeta, Connection, PublicKey, SYSVAR_RENT_PUBKEY, Transaction } from '@solana/web3.js';
 import { Program } from "@coral-xyz/anchor";
 import * as anchor from "@coral-xyz/anchor"
 import {
@@ -14,18 +14,27 @@ import { getGameAccountPublicKey, getGameVaultccountPublicKey, getPlayerBetAccou
 import { HomeNavProps } from '@/utils/HomeParamList';
 import { useUserStore } from '@/store/user_state';
 import { Appbar, Button } from 'react-native-paper';
+import { UseVortexAppProgram } from '@/utils/useVortexAppProgram';
+import SuccessLogoCheck from '@/components/SuccessLogoCheck';
+import ErrorLogoCross from '@/components/ErrorLogoCross';
 
 
 const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
 
     const {user_details} = useUserStore()
-    const {game_id  , user_betting_on , user_who_is_betting , is_player , is_replay, bet_type} = route.params
+    const {game_id  , user_betting_on , user_who_is_betting , is_player , is_replay, bet_type , session_id} = route.params
     const { authorizeSession, selectedAccount } = useAuthorization();
+    const {vortexAppProgram} = UseVortexAppProgram(selectedAccount!.publicKey)
     const [connection] = useState(
         () => new Connection("https://api.devnet.solana.com")
       );
       const [amount, setAmount] = useState('');
       const inputRef = useRef(null);
+      const [loading , setLoading] = useState(false)
+      const [message , setMessage] = useState("")
+      const [showFinalMessage , setShowFinalMessage] = useState(false)
+      const [successLogo , setSuccessLogo] = useState(false)
+      const [errorLogo , setErrorLogo] = useState(false)
     
       const handleAmountChange = (text: string) => {
         // Remove any non-numeric characters except the decimal point
@@ -49,10 +58,27 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
         setAmount(cleanedText);
       };
     
-      const handleStakePress = () => {
+      const handleStakePress = async () => {
         // Handle stake functionality here
-        console.log('Staking amount:', amount);
-        // Add your logic for processing the payment
+        setMessage(`Initializing  ${is_player ? "Player" : "User" } Bet`)
+        setLoading(true)
+
+        if (is_player) {
+            await initializePlayerBet(vortexAppProgram , session_id , parseFloat(amount))
+        } else {
+          await initializeUserGameBet(vortexAppProgram , session_id ,  parseFloat(amount) )
+        }
+
+        setMessage("Bet Initialized Successfully")
+
+
+        setTimeout(() => {
+          setShowFinalMessage(true)
+          setSuccessLogo(true)  
+          setLoading(false)
+            
+        } , 1000)
+
       };
     
       const handleBackPress = () => {
@@ -60,6 +86,45 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
         navigation.goBack();
       };
     
+
+      async function isAccountInitialized(
+        accountPubkey: PublicKey
+      ): Promise<boolean> {
+        try {
+          // Fetch the account info
+          const accountInfo = await connection.getAccountInfo(accountPubkey);
+          
+          // If accountInfo is null, the account doesn't exist
+          if (accountInfo === null) {
+            console.log("Account does not exist");
+            return false;
+          }
+          
+          // Check if the account has data (initialized accounts typically have data)
+          if (accountInfo.data.length === 0) {
+            console.log("Account exists but has no data (may not be initialized)");
+            return false;
+          }
+          
+          // For program-owned accounts, you might want to check the owner is your program
+          // const MY_PROGRAM_ID = new PublicKey("YourProgramIdHere");
+          // if (!accountInfo.owner.equals(MY_PROGRAM_ID)) {
+          //   console.log("Account is not owned by the expected program");
+          //   return false;
+          // }
+          
+          // For program-specific accounts, you may need to check initialization flag
+          // if your account data has a specific structure that includes this information
+          // const decodedData = YourAccountDataStruct.decode(accountInfo.data);
+          // return decodedData.isInitialized;
+          
+          // Basic check - account exists and has data
+          return true;
+        } catch (error) {
+          console.error("Error checking account:", error);
+          return false;
+        }
+      }
       
 
       const initializeGame = useCallback(
@@ -318,43 +383,91 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
       );
 
 
+
+
+      useEffect(() => {
+
+        const checkPDAAndInitGameIfNecessary = async () => {
+          setMessage("Checking if Game Account is already initialized or not")
+          setLoading(true)
+          let game_id_buffer = uint8ArrayToBuffer(game_id)
+          let session_id_buffer = stringToBuffer(session_id)
+          //Add pub key here
+          let gameAccount = getGameAccountPublicKey(vortexAppProgram.programId , game_id_buffer , session_id_buffer)
+
+          let isAccountInitResp = await isAccountInitialized(gameAccount)
+
+          if (isAccountInitResp) {
+           
+            setMessage("Game Already Initialized")
+          } else {
+            setMessage("Game Account Not initialized. Initializing Game Account")
+            await initializeGame(vortexAppProgram , session_id)
+          }
+
+          setMessage("Game Account Initialized")
+
+          setLoading(false)
+        }
+
+
+        checkPDAAndInitGameIfNecessary()
+      } , [])
+
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#6200ee" barStyle="light-content" />
       
       <Appbar.Header>
-        <Appbar.BackAction onPress={handleBackPress}/>
+        <Appbar.BackAction onPress={handleBackPress} disabled={loading}/>
       </Appbar.Header>
       
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.contentContainer}
-      >
-        <View style={styles.formContainer}>
-          <Text style={styles.title}>Enter Stake Amount</Text>
-          
-          <View style={styles.inputContainer}>
-            <TextInput
-              ref={inputRef}
-              style={styles.input}
-              value={amount}
-              onChangeText={handleAmountChange}
-              placeholder="0.000"
-              keyboardType="numeric"
-              textAlign="right"
-            />
-            <Text style={styles.currencySymbol}>USD</Text>
-          </View>
-          
-          <Button 
-            mode="contained" 
-            style={styles.stakeButton}
-            onPress={handleStakePress}
-          >
-            Stake
-          </Button>
+    {
+      loading && !showFinalMessage ? <View> 
+
+      <ActivityIndicator animating={true}  />
+        {message}
+      </View> :       <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.contentContainer}
+    >
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Enter Stake Amount</Text>
+        
+        <View style={styles.inputContainer}>
+          <TextInput
+            ref={inputRef}
+            style={styles.input}
+            value={amount}
+            onChangeText={handleAmountChange}
+            placeholder="0.000"
+            keyboardType="numeric"
+            textAlign="right"
+          />
+          <Text style={styles.currencySymbol}>USD</Text>
         </View>
-      </KeyboardAvoidingView>
+        
+        <Button 
+          mode="contained" 
+          style={styles.stakeButton}
+          onPress={handleStakePress}
+        >
+          Stake
+        </Button>
+      </View>
+    </KeyboardAvoidingView>
+    }
+
+    {
+      showFinalMessage ?  successLogo ? <SuccessLogoCheck replaceScreen={
+        () => {
+          navigation.replace("gamebet_screen")
+        }
+      } /> : <ErrorLogoCross onRetry={() => {
+        navigation.replace("qr_scanner")
+      }}/> : <></>
+    }
     </View>
   )
 }
