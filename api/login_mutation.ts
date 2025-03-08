@@ -72,7 +72,7 @@ export const useLogin = () => {
 
         onSuccess: (data) => {
             console.log('Login successful:', data);
-            return data
+            return {result: { success: true} , data: data}
           },
           onError: (error) => {
             // Handle errors appropriately

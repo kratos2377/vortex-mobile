@@ -1,85 +1,110 @@
-import * as React from "react"
-import { useState, type RefObject } from "react";
-import { TextInput, View, StyleSheet } from "react-native";
+import React, { RefObject } from 'react';
+import { 
+  View, 
+  TextInput, 
+  StyleSheet, 
+  Platform,
+  Dimensions,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData
+} from 'react-native';
+import { Text } from 'react-native-paper';
 
-interface OTPInputProps {
+type OTPInputProps = {
   codes: string[];
   refs: RefObject<TextInput>[];
-  errorMessages: string[] | undefined;
+  errorMessages?: string[];
   onChangeCode: (text: string, index: number) => void;
-}
+};
 
-interface OTPInputConfig {
-  backgroundColor: string;
-  textColor: string;
-  borderColor: string;
-  errorColor: string;
-  focusColor: string;
-}
+export const OTPInput = ({ 
+  codes, 
+  refs, 
+  errorMessages, 
+  onChangeCode
+}: OTPInputProps) => {
+  const { width } = Dimensions.get('window');
+  const inputWidth = Math.min(45, (width - 100) / 6);
 
-export function OTPInput({
-  codes,
-  refs,
-  errorMessages,
-  onChangeCode,
-}: OTPInputProps) {
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-  
-  const styles = StyleSheet.create({
-    container: {
-      flexDirection: "row",
-      width: "100%",
-      justifyContent: "space-between",
-    },
-    input: {
-      fontSize: 16,
-      height: 48,
-      width: 48,
-      borderRadius: 8,
-      textAlign: "center",
-      backgroundColor: '#ffffff',
-      color: "#000000",
-      borderColor: "#000000",
-      borderWidth: 2,
-    },
-    errorInput: {
-      borderColor: "#e60517",
-      color: "#f7ec1b",
-    },
-    focusedInput: {
-      borderColor: "#1bf7f4",
+  // Handle key press, including backspace for navigation
+  const handleKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>, index: number) => {
+    const key = e.nativeEvent.key;
+
+    // If backspace is pressed and the current input is empty, focus on previous input
+    if (key === 'Backspace' && !codes[index] && index > 0) {
+      refs[index - 1]?.current?.focus();
     }
-  });
-
-  const handleFocus = (index: number) => setFocusedIndex(index);
-  const handleBlur = () => setFocusedIndex(null);
+  };
 
   return (
     <View style={styles.container}>
-      {codes.map((code, index) => (
-        <TextInput
-          key={index}
-          autoComplete="one-time-code"
-          enterKeyHint="next"
-          style={[
-            styles.input, 
-            errorMessages && styles.errorInput,
-            focusedIndex === index && styles.focusedInput,
-          ]}
-          onChangeText={(text) => onChangeCode(text, index)}
-          value={code}
-          onFocus={()=> handleFocus(index)}
-          onBlur={handleBlur}
-          maxLength={index === 0 ? codes.length : 1}
-          ref={refs[index]}
-          onKeyPress={({ nativeEvent: { key } }) => {
-            if (key === "Backspace" && index > 0) {
-              onChangeCode("", index);
-              refs[index - 1]!.current!.focus();
-            }
-          }}
-        />
-      ))}
+      <View style={styles.inputsContainer}>
+        {Array(6).fill(0).map((_, index) => (
+          <View 
+            key={index} 
+            style={[
+              styles.inputContainer,
+              { width: inputWidth, height: inputWidth * 1.5 },
+              errorMessages && errorMessages.length > 0 ? styles.inputError : null,
+              codes[index] ? styles.inputFilled : null
+            ]}
+          >
+            <TextInput
+              ref={refs[index]}
+              style={styles.input}
+              keyboardType="number-pad"
+              maxLength={1}
+              value={codes[index]}
+              onChangeText={(text) => onChangeCode(text, index)}
+              onKeyPress={(e) => handleKeyPress(e, index)}
+              selectionColor="#6200ee"
+              autoComplete="one-time-code"
+              textContentType={Platform.OS === 'ios' ? 'oneTimeCode' : undefined}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              selectTextOnFocus
+            />
+          </View>
+        ))}
+      </View>
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  inputsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginVertical: 20,
+  },
+  inputContainer: {
+    borderWidth: 1.5,
+    borderRadius: 8,
+    borderColor: '#e0e0e0',
+    backgroundColor: '#f5f5f5',
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    fontSize: 20,
+    fontWeight: '500',
+    textAlign: 'center',
+    height: '100%',
+    width: '100%',
+    color: '#333',
+    paddingHorizontal: 0,
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+  inputFilled: {
+    borderColor: '#6200ee',
+    backgroundColor: '#fff',
+  },
+});

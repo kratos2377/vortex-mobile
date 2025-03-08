@@ -43,7 +43,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
     };
 
     const { isLoading, isError, data, error , refetch } = useQuery({
-      queryKey: ['game-bets' , pageNo , selectedAccount!.publicKey],
+      queryKey: ['game-bets' , pageNo , selectedAccount?.publicKey],
       queryFn: fetchUserBets,
     })
   
@@ -167,7 +167,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
             }}
             style={styles.addressMenu}
             visible={menuVisible}>
-            {accounts!.map(account => {
+            {accounts?.map(account => {
               const base58PublicKey = account.publicKey.toBase58();
               return (
                 <Menu.Item
@@ -193,7 +193,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
         <Modal visible={disconnectModal} onDismiss={() => {setDisconnectModal(false)}} contentContainerStyle={{backgroundColor: 'white', padding: 10}}>
 
             <View style={{marginBottom: 10}}>
-              <Text>Current Address is: {selectedAccount!.publicKey.toString()}</Text>
+              <Text>Current Address is: {selectedAccount?.publicKey.toString()}</Text>
             </View>
 
 

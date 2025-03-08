@@ -12,10 +12,8 @@ import Registration from './auth/registration';
 import GameBetScreen from './home/gamebet_screen';
 import ProfileScreen from './home/profile_screen';
 import QRScannerScreen from './home/qr_scanner';
-import SwapScreen from './home/swap_screen';
 import MainScreen from './home/main_screen';
 import VerificationScreen from './auth/verification_screen';
-import { DEVNET_ENDPOINT } from '../rpc/constants';
 import { AuthParamList } from '@/utils/AuthParamList';
 import { HomeParamList } from '@/utils/HomeParamList';
 
@@ -40,7 +38,7 @@ export default function BaseScreen() {
     if(token === null || token === undefined || token === "") {
       console.log("Setting logging as true")
       //Disabling for now
-      //setIsLoginRequired(true)
+      setIsLoginRequired(true)
     }
 
   }
@@ -66,13 +64,21 @@ export default function BaseScreen() {
   if(isLoginRequired) {
     return (
         <NavigationContainer>
-        <Stack.Navigator initialRouteName='login'>
+        <Stack.Navigator initialRouteName='login' screenOptions={{
+        headerShown: false
+      }}>
   
   
         
-              <Stack.Screen name="login" component={LoginScreen} />
-        <Stack.Screen name="registration"  component={Registration}/>
-        <Stack.Screen name="verification_screen"  component={VerificationScreen}/>
+              <Stack.Screen name="login" component={LoginScreen} options={{
+        headerShown: false
+      }}/>
+        <Stack.Screen name="registration"  component={Registration} options={{
+        headerShown: false
+      }}/>
+        <Stack.Screen name="verification_screen"  component={VerificationScreen} options={{
+        headerShown: false
+      }}/>
   
     
         </Stack.Navigator>
