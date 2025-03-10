@@ -10,7 +10,8 @@ export interface UpdatePlayerStakeMutation {
     amount: number;
     session_id: string;
     wallet_key: string;
-    is_replay: boolean
+    is_replay: boolean,
+    is_match: boolean,
   }
 
 

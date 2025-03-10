@@ -22,7 +22,7 @@ import ErrorLogoCross from '@/components/ErrorLogoCross';
 const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
 
     const {user_details} = useUserStore()
-    const {game_id  , user_betting_on , user_who_is_betting , is_player , is_replay, bet_type , session_id} = route.params
+    const {game_id  , user_betting_on , user_who_is_betting , is_player , is_replay, bet_type , session_id , is_match} = route.params
     const { authorizeSession, selectedAccount } = useAuthorization();
     const {vortexAppProgram} = UseVortexAppProgram(selectedAccount!.publicKey)
     const [connection] = useState(
