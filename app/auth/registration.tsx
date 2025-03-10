@@ -20,6 +20,10 @@ import {
   DefaultTheme
 } from 'react-native-paper';
 import { AuthNavProps } from '@/utils/AuthParamList';
+import AlertMessage from '@/components/AlertMessage';
+import { useRegistration } from '@/api/registration_mutation';
+import { save_user_details } from '@/store/store';
+import { useSendEmailMutation } from '@/api/send_email_mutation';
 
 
 const theme = {
@@ -53,6 +57,15 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
   //Password visibility states
   const [showPassword , setShowPassword] = useState(false)
   const [showConfirmPassword , setShowConfirmPassword] = useState(false)
+
+
+  const [showAlert , setShowAlert] = useState(false)
+  const [message , setMessage] = useState("")
+  const [type , setType] = useState<"success" | "error">("success")
+
+
+  const registration = useRegistration()
+    const sendEmail = useSendEmailMutation()
 
   const validateForm = () => {
     let isValid = true;
@@ -121,11 +134,83 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
     if (validateForm()) {
       setRequestSent(true);
       // Simulate API call
-      setTimeout(() => {
-        setRequestSent(false);
-        // Here you would typically navigate to the login screen or home screen
-        alert("Registration successful!");
-      }, 3000);
+
+        registration.mutate({
+          username: username,
+          email: email,
+          first_name: first_name,
+          last_name: last_name,
+          password: confirmPassword
+        })
+
+          if (registration.error) {
+            setType("error")
+            setMessage("Some Error Occured")
+            setShowAlert(true)
+
+
+          } else {
+            if ( !registration.data?.result.success) {
+              setType("error")
+              setMessage("Some Error Occured")
+              setShowAlert(true)
+
+              setTimeout(() => {
+                setShowAlert(false)
+              } , 1000)
+
+            } else {
+              setType("success")
+              setMessage("Registration Successful!")
+              setShowAlert(true)
+            //  await save_user_details(registration.data.token , registration.data.user.id)
+              if (!registration.data.user.verified) {
+
+
+                sendEmail.mutate({
+                  to_email: registration.data.user.email,
+                  id: registration.data.user.id
+                })
+
+                if (sendEmail.error || !sendEmail.data?.result) {
+                  setType("error")
+                  setMessage("Some Error Occured while sending verification code")
+                  setShowAlert(true)
+
+                  setTimeout(() => {
+                    setShowAlert(false)
+                  } , 1000)
+                } else {
+
+
+                  setType("success")
+                  setMessage("Registration Successful! Redirecting to verification screen")
+                  setShowAlert(true)
+
+                  setTimeout(() => {
+                    setShowAlert(false)
+                    navigation.replace("verification_screen")
+                  } , 1000)
+
+                }
+                
+               
+
+       
+              } else {
+
+                setTimeout(() => {
+                  setShowAlert(false)
+                } , 1000)
+
+              }
+            }
+          }
+         
+          
+          setRequestSent(false)
+
+      
     }
   };
 
@@ -143,6 +228,8 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
             <Paragraph style={styles.paragraph}>
               Please fill in the details to register
             </Paragraph>
+
+        {showAlert ?     <AlertMessage message={message} type={type}/> : <></>}
 
             <View style={styles.nameRow}>
               <View style={styles.nameField}>

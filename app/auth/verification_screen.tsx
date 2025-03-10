@@ -13,10 +13,15 @@ import {
   StatusBar
 } from 'react-native';
 import { Surface, Text, Button } from "react-native-paper";
+import { useSendEmailMutation } from '@/api/send_email_mutation';
+import { useVerifyCodeMutation } from '@/api/verify_code_mutation';
+import { useUserStore } from '@/store/user_state';
+import AlertMessage from '@/components/AlertMessage';
 
 const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_screen'>) => {
+  const { fn } = route.params
 
-
+  const {user_details , updateUserVerifiedStatus} = useUserStore()
     const [codes, setCodes] = useState<string[]>(Array(6).fill(""));
     const refs: RefObject<TextInput>[] = [
       useRef<TextInput>(null),
@@ -37,6 +42,13 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
     const [resendCount, setResendCount] = useState(0);
     const [timerDuration, setTimerDuration] = useState(60);  // Initial timer duration
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    const [showAlert , setShowAlert] = useState(false)
+    const [message , setMessage] = useState("")
+    const [type , setType] = useState<"success" | "error">("success")
+
+    const sendEmail = useSendEmailMutation()
+    const verifyCode = useVerifyCodeMutation()
 
     const onChangeCode = (text: string, index: number) => {
       // If pasting a full code
@@ -86,9 +98,50 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
         setErrorMessages(["Please enter all 6 digits of the verification code"]);
         return;
       }
+
       
       setIsLoading(true);
       
+
+      let final_code = ""
+
+      codes.map((el) => final_code += el )
+
+
+      console.log("Final Code is")
+      console.log(final_code)
+
+      verifyCode.mutate({
+        user_key: final_code,
+        id: user_details.id
+      })
+      
+
+      if (verifyCode.error || !verifyCode.data?.result) {
+
+        setType("error")
+        setMessage("Some Error Occured while verifying code")
+        setShowAlert(true)
+
+        setTimeout(() => {
+          setShowAlert(false)
+        } , 1000)
+
+      } else {
+        updateUserVerifiedStatus(true)
+        setType("success")
+        setMessage("Verification Successful.")
+        setShowAlert(true)
+
+        setTimeout(() => {
+          setShowAlert(false)
+          fn()
+        } , 1000)
+
+
+
+      }
+
       // Simulate verification API call
       setTimeout(() => {
         setIsLoading(false);
@@ -105,6 +158,12 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
         alert("Maximum resend attempts reached. Please contact support.");
         return;
       }
+
+
+      sendEmail.mutate({
+        to_email: user_details.email,
+        id: user_details.id
+      })
       
       // Increase counter and reset codes
       setResendCount(prev => prev + 1);
@@ -161,6 +220,8 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
                     We've sent a 6-digit code to your email
                   </Text>
                 </View>
+
+                {showAlert ? <AlertMessage message={message} type={type}/> : <></>}
                 
                 <OTPInput
                   codes={codes}
