@@ -17,6 +17,7 @@ import { Appbar, Button } from 'react-native-paper';
 import { UseVortexAppProgram } from '@/utils/useVortexAppProgram';
 import SuccessLogoCheck from '@/components/SuccessLogoCheck';
 import ErrorLogoCross from '@/components/ErrorLogoCross';
+import { useConnection } from '@/utils/ConnectionProvider';
 
 
 const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
@@ -25,9 +26,7 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
     const {game_id  , user_betting_on , user_who_is_betting , is_player , is_replay, bet_type , session_id , is_match} = route.params
     const { authorizeSession, selectedAccount } = useAuthorization();
     const {vortexAppProgram} = UseVortexAppProgram(selectedAccount!.publicKey)
-    const [connection] = useState(
-        () => new Connection("https://api.devnet.solana.com")
-      );
+      const {connection} = useConnection()
       const [amount, setAmount] = useState('');
       const inputRef = useRef(null);
       const [loading , setLoading] = useState(false)

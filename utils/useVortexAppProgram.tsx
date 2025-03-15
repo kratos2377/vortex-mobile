@@ -2,14 +2,12 @@ import { STABLE_POOL_IDL, STABLE_POOL_PROGRAM_ID } from "@/constants/const";
 import { Idl, Program } from "@coral-xyz/anchor";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { useMemo, useState } from "react";
+import { useConnection } from "./ConnectionProvider";
 
 export function UseVortexAppProgram(key: PublicKey) {
     const vortexProgramId = STABLE_POOL_PROGRAM_ID
 
-    const [connection] = useState(
-        () => new Connection("https://api.devnet.solana.com")
-      );
-
+  const {connection} = useConnection()
 
 const [vortexAppPDA] = useMemo(() => {
         const counterSeed = key.toBuffer();

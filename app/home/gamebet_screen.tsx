@@ -4,7 +4,7 @@ import { useUserStore } from '../../store/user_state';
 import { StatusBar } from 'expo-status-bar';
 import AccountInfo from '../../components/AccountInfo';
 import SignInButton from '../../components/SignInButton';
-import { Appbar, Button, Menu, Modal, PaperProvider, Portal, Surface, useTheme , Text } from 'react-native-paper';
+import { Appbar, Button, Menu, Modal, PaperProvider, Portal, Surface, useTheme , Text, ActivityIndicator } from 'react-native-paper';
 import { Account, useAuthorization } from '@/utils/useAuthorization';
 import { HomeNavProps } from '@/utils/HomeParamList';
 import GameBetsList from '@/components/GameBetsList';
@@ -12,6 +12,10 @@ import DisconnectButton from '@/components/DisconnectButton';
 import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
 import { GAME_BET_ROUTE, GET_USER_BETS_ROUTE, NEBULA_BASE_URL } from '@/api/constants';
 import { useQuery } from '@tanstack/react-query';
+import { checkUsdcTokenAccountExists } from '@/rpc/mintTokenAccountCheck';
+import { USDC_MINT_ADDRESS } from '@/constants/const';
+import { useConnection } from '@/utils/ConnectionProvider';
+import { createUSDCMintTokenForUser } from '@/rpc/createUSDCMintTokenAccount';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
     const {user_details} = useUserStore()
@@ -23,6 +27,8 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
     const [disconnectModal , setDisconnectModal] = useState(false)
       const [menuVisible, setMenuVisible] = useState(false);
       const [pageNo , setPageNo] = useState(0)
+      const [tokenAccountCreateModal , setTokenCreateModal] = useState(false)
+      const {connection} = useConnection()
     const {accounts, selectedAccount , authorizeSessionWithSignIn , deauthorizeSession} = useAuthorization();
 
 
@@ -75,9 +81,23 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
 
     useEffect(() => {
 
+    const checkMintTokenAccountAndFetchBets = async () => {
       if(selectedAccount !== undefined && selectedAccount !== null) {
-        refetch()
+        let response = await checkUsdcTokenAccountExists(connection  , selectedAccount.publicKey.toString())
+
+        if (response.exists) {
+          refetch()
+        } else {
+          setTokenCreateModal(true)
+          await createUSDCMintTokenForUser(selectedAccount.publicKey).then(() => {
+            setTokenCreateModal(false)
+          refetch()
+          })
+        }
       }
+    }
+
+    checkMintTokenAccountAndFetchBets()
       
 
     } , [selectedAccount])
@@ -150,6 +170,13 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
         </Modal>
       </Portal>
 
+
+      <Portal>
+        <Modal visible={tokenAccountCreateModal} onDismiss={() => {}} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
+        <ActivityIndicator animating={true} />
+          <Text>Initializing USDC Token Account for selected address</Text>
+        </Modal>
+      </Portal>
 
       <Portal>
         <Modal visible={showChangeAddressModal} onDismiss={() => {setShowChangeAddressModal(false)}} contentContainerStyle={{backgroundColor: 'white', padding: 10}}>
@@ -256,3 +283,4 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 });
+

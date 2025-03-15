@@ -6,22 +6,17 @@ import { getShadowProps, goToSettings } from '@/helpers';
 import { EPermissionTypes, usePermissions } from '@/hooks/usePermissions';
 import { HomeNavProps } from '@/utils/HomeParamList';
 import { Camera, CameraType } from 'expo-camera';
+import { useAuthorization } from '@/utils/useAuthorization';
+import { Modal, PaperProvider } from 'react-native-paper';
 
 export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_scanner'>) {
   const [type, setType] = useState(CameraType.back);
   const [hasCameraPermission, setCameraPermission] = Camera.useCameraPermissions();
+  const {selectedAccount} = useAuthorization()
+  const [showModal , setShowModal] = useState(false)
 
-  // useEffect(() => {
-  //   const requestPermissions = async () => {
-  //     const cameraPermission = await Camera.requestCameraPermissionsAsync();
-
-  //     setCameraPermission(cameraPermission.status === "granted");
-  //     console.log("CAMERA PERMISSION")
-  //     console.log(hasCameraPermission)
-  //   };
-
-  //   requestPermissions();
-  // }, []);
+  const hideModal = () => setShowModal(false);
+  const containerStyle = {backgroundColor: 'white'};
 
   useEffect(() => {
     if (hasCameraPermission !== null ) {
@@ -50,7 +45,23 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
 
   const handleBarCodeScanned = async ({ data }: {data: string}) => {
     Vibration.vibrate();
-    console.log("data", data);
+    if (selectedAccount === undefined || selectedAccount === null) {
+      setShowModal(true)
+    } else {
+      console.log("data", data);
+
+      navigation.push("bet_screen", {
+        game_id: data.game_id,
+        user_betting_on: data.user_betting_on,
+        user_who_is_betting: data.user_who_is_betting,
+        is_player: data.is_player,
+        is_replay: data.is_replay,
+        bet_type: data.bet_type,
+        session_id: data.session_id,
+        is_match: data.is_match,
+      })
+    }
+
   };
 
   const goToSettings = () => {
@@ -64,9 +75,16 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
 
   if (hasCameraPermission?.granted) {
     return (
-      <View style={styles.cameracontainer}>
+      <PaperProvider>
+        <Modal visible={showModal} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+        <Text>No Account Selected.</Text>  
+        <Text>You have to select a valid account in HomeScreen First. Only then you can bet</Text>
+        </Modal>
+
+             <View style={styles.cameracontainer}>
       <Camera style={styles.camera} type={type} onBarCodeScanned={handleBarCodeScanned}/>
     </View>
+      </PaperProvider>
     );
   }
 
