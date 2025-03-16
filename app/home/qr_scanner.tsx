@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, Alert, BackHandler, SafeAreaView, Vibration, Linking} from 'react-native';
+import {View, Text, TouchableOpacity, Alert, BackHandler, SafeAreaView, Vibration, Linking, Button} from 'react-native';
 import { CameraScanner } from "@/components/CameraScanner";
 import {StyleSheet} from 'react-native';
 import { getShadowProps, goToSettings } from '@/helpers';
@@ -8,47 +8,64 @@ import { HomeNavProps } from '@/utils/HomeParamList';
 import { Camera, CameraType } from 'expo-camera';
 import { useAuthorization } from '@/utils/useAuthorization';
 import { Modal, PaperProvider } from 'react-native-paper';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import * as ImagePicker from "expo-image-picker";
 
 export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_scanner'>) {
   const [type, setType] = useState(CameraType.back);
-  const [hasCameraPermission, setCameraPermission] = Camera.useCameraPermissions();
+  const [displayText, setDisplayText]= useState("");
+  const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const {selectedAccount} = useAuthorization()
   const [showModal , setShowModal] = useState(false)
 
   const hideModal = () => setShowModal(false);
   const containerStyle = {backgroundColor: 'white'};
 
+
   useEffect(() => {
-    if (hasCameraPermission !== null ) {
-      // Check permissions and execute logic when both permissions are set
-      if (!hasCameraPermission.granted) {
-        Alert.alert(
-          "Camera Permissions Required",
-          "You must grant access to your camera to scan QR codes",
-          [
-            { text: "Go to settings", onPress: goToSettings },
-            {
-              text: "Cancel",
-              onPress: () => {
-                navigation.replace("gamebet_screen")
-              },
-              style: "cancel",
-            },
-          ]
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasCameraPermission(status === "granted");
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+ 
+ 
+ // pick an image from gallery
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
+ 
+ 
+    // if the user successfully picks an image then we check if the image has a QR code
+    if (result && result.assets[0].uri) {
+      try {
+        const scannedResults = await BarCodeScanner.scanFromURLAsync(
+          result.assets[0].uri
         );
-      } else {
-        console.log("CAMERA has camera PERMISSION")
-        console.log(hasCameraPermission)
+ 
+ 
+        const dataNeeded = scannedResults[0].data;
+        setDisplayText(dataNeeded)
+      } catch (error) {
+ // if there this no QR code
+        setDisplayText("No QR Code Found");
+        setTimeout(() => setDisplayText(""), 4000);
       }
     }
-  }, [hasCameraPermission]);
+  };
 
   const handleBarCodeScanned = async ({ data }: {data: string}) => {
     Vibration.vibrate();
     if (selectedAccount === undefined || selectedAccount === null) {
       setShowModal(true)
     } else {
-      console.log("data", data);
+      console.log("data from qr scanner is: ", data);
 
       navigation.push("bet_screen", {
         game_id: data.game_id,
@@ -81,9 +98,29 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
         <Text>You have to select a valid account in HomeScreen First. Only then you can bet</Text>
         </Modal>
 
-             <View style={styles.cameracontainer}>
-      <Camera style={styles.camera} type={type} onBarCodeScanned={handleBarCodeScanned}/>
-    </View>
+        <View style={styles.cameraQRContainer}>
+     <Camera
+         style={{ flex: 1 }}
+         barCodeScannerSettings={{
+           barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+         }}
+
+        onBarCodeScanned={handleBarCodeScanned}
+       />
+
+      <View style={styles.boxContainer}>
+        <View style={{marginBottom:50}}>
+          <Text style={{height:40, width: 300, backgroundColor:'white',marginBottom:20}}>{displayText}</Text>
+          <Button title='Pick from gallery' onPress={pickImage}/>
+        </View>
+      </View>
+
+      <View
+        style={styles.scanBoxContainer}
+      >
+        <View style={styles.scanBox}></View>
+      </View>
+ </View>
       </PaperProvider>
     );
   }
@@ -140,4 +177,32 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
+
+  cameraQRContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  boxContainer:{
+    position:'absolute',
+    display:'flex',
+    justifyContent:'flex-end',
+    alignItems:'center',
+    height:'100%',
+    width:'100%',
+    zIndex:1
+  },
+  scanBoxContainer:{
+    position:'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height:'100%',
+    width:'100%',
+    zIndex:0,
+  },
+  scanBox: {
+    width: 300,
+    height: 300,
+    borderWidth: 1,
+    borderColor: "white",
+  }
 });
