@@ -88,9 +88,6 @@ export default function BaseScreen() {
 
     }
 
-    // console.log("SET IS LOGIN REQUIRED VALUE IS")
-    // console.log(isLoginRequired)
-    //setLoading(false)
 
     setTimeout(async () => {
       await SplashScreen.hideAsync();
@@ -159,7 +156,9 @@ export default function BaseScreen() {
 
         <MainStack.Screen name="main_screen" component={MainScreen}   options={{
         headerShown: false
-      }}/>
+      }}
+      initialParams={{ fn: handleGetUserTokenFromStorage }}
+      />
   
       </MainStack.Navigator>
       </NavigationContainer>

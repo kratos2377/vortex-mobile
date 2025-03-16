@@ -4,6 +4,7 @@ export const NEBULA_BASE_URL = process.env.NEBULA_BASE_URL || "http://localhost:
 
 //group routes
 export const USER_AUTH_ROUTE = "/api/v1/auth"
+export const USER_LOGIC_ROUTE = "/api/v1/user"
 export const GAME_BET_ROUTE = "/api/v1/game_bets"
 export const GAME_ROUTE = "/api/v1/game"
 
@@ -18,6 +19,7 @@ export const CHECK_STAKE_STATUS_ROUTE = "/check_stake_status"
 export const UPDATE_PLAYER_STAKE_ROUTE = "/update_player_stake"
 export const PUBLISH_USER_STAKE_ROUTE = "/publish_user_stake"
 export const GET_USER_BETS_ROUTE = "/get_user_bets"
+export const CHANGE_USER_PASSWORD_ROUTE = "/change_user_password"
 
 
 

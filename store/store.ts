@@ -13,3 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
   export const  getUserTokenFromStorage =  async () => {
     return  await AsyncStorage.getItem('user.token')
   }
+
+  export const deleteDetailsFromStorage = async () => {
+    await AsyncStorage.removeItem('user.token')
+    await AsyncStorage.removeItem('user.id')
+  }

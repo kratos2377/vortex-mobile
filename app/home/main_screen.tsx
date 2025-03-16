@@ -8,6 +8,7 @@ import { HomeNavProps } from '@/utils/HomeParamList'
 
 const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
     const Tab = createBottomTabNavigator()
+    const { fn } = route.params
   return (
     <Tab.Navigator initialRouteName="gamebet_screen" screenOptions={ { 
         tabBarShowLabel: false,
@@ -47,6 +48,7 @@ const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
 <Tab.Screen
       name="profile_screen"
       component={ProfileScreen}
+      initialParams={{ fn: fn }}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons
