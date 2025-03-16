@@ -44,27 +44,47 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
         return []
       }
 
-      const response = await axios.get(NEBULA_BASE_URL + GAME_BET_ROUTE + GET_USER_BETS_ROUTE + "/" + user_details.id + "/" + 
-        selectedAccount!.publicKey.toString() + "/" + pageNo.toString() );
-        console.log("RESPONSE FROM GAME BETS API IS")
-        console.log(response)
-        if(response.status === 200 || response.status == 201) {
+      console.log("STARTING GET CALL TO FETCH BETS")
 
-        // will set game bets here
+      try {
+        console.log("NEBULA BASE URL IS")
+        console.log(NEBULA_BASE_URL)
+        const urlPath = NEBULA_BASE_URL + GAME_BET_ROUTE + GET_USER_BETS_ROUTE + "/" + user_details.id + "/" + 
+        selectedAccount!.publicKey.toString() + "/" + pageNo.toString();
 
-    
+        console.log("URL PATH IS")
+        console.log(urlPath)
 
-          setTimeout(() => {
-            setIsLoading(false)
-          } , 1000)
+        const response = await axios.get(urlPath);
+          console.log("RESPONSE FROM GAME BETS API IS")
+          console.log(response)
+          if(response.status === 200 || response.status == 201) {
+  
+          // will set game bets here
+  
+      
+  
+            setTimeout(() => {
+              setIsLoading(false)
+            } , 1000)
+  
+          } else {
+            
+            setTimeout(() => {
+              setIsLoading(false)
+            } , 1000)
+            return []
+          }
+  
+      } catch(err) {
 
-        } else {
-          setTimeout(() => {
-            setIsLoading(false)
-          } , 1000)
-          return []
-        }
-
+        console.log("ERROR GOR GET CALL IS")
+        console.log(err)
+        setTimeout(() => {
+          setIsLoading(false)
+        } , 1000)
+        return []
+      }
 
     };
 
@@ -153,26 +173,30 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
       [authorizeSession, connection]
     );
 
+    const checkMintTokenAccountAndFetchBets = async () => {
+      if(selectedAccount !== undefined && selectedAccount !== null) {
+        let response = await checkUsdcTokenAccountExists(connection  , selectedAccount.publicKey.toString())
+        console.log("RESPONSE for check usdc token account is")
+        console.log(response)
+        if (response.exists) {
+          console.log("FETCHING BETS")
+          fetchUserBets()
+        } else {
+          setTokenCreateModal(true)
+          await createUSDCMintTokenForUser(selectedAccount.publicKey).then(() => {
+            setTokenCreateModal(false)
+            fetchUserBets()
+          }).catch((err) => {
+            return []
+          })
+        }
+      }
+    }
+
 
     useEffect(() => {
 
-      const checkMintTokenAccountAndFetchBets = async () => {
-        if(selectedAccount !== undefined && selectedAccount !== null) {
-          let response = await checkUsdcTokenAccountExists(connection  , selectedAccount.publicKey.toString())
-  
-          if (response.exists) {
-            fetchUserBets()
-          } else {
-            setTokenCreateModal(true)
-            await createUSDCMintTokenForUser(selectedAccount.publicKey).then(() => {
-              setTokenCreateModal(false)
-              fetchUserBets()
-            }).catch((err) => {
-              return []
-            })
-          }
-        }
-      }
+
   
       checkMintTokenAccountAndFetchBets()
         

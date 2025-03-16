@@ -43,7 +43,18 @@ export default function BaseScreen() {
       //Disabling for now
       setIsLoginRequired(true)
     } else {
-
+      // let user_mod: UserModel = {
+      //         id: "8a1f9d34-5086-4994-a89f-923f87824761",
+      //         username: "necromorph23",
+      //         email: "shobityadav23@gmail.com",
+      //         first_name: "Shobhit",
+      //         last_name: "Yadav",
+      //         score: 300,
+      //         verified: true
+      //     }
+    
+      //       updateUserDetails(user_mod)
+      // setIsLoginRequired(false)
 
       let verify_token_res = await handleVerifyTokenMutation({
         token: token
