@@ -15,6 +15,8 @@ import { AuthParamList } from '@/utils/AuthParamList';
 import { HomeParamList } from '@/utils/HomeParamList';
 import { useVerifyTokenMutation } from '@/api/verify_token_mutation';
 import { useUserStore } from '@/store/user_state';
+import { ActivityIndicator } from 'react-native-paper';
+import { View } from 'react-native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();
@@ -26,6 +28,8 @@ export default function BaseScreen() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+
+  const [loading , setLoading] = useState(true)
 
   const [isLoginRequired , setIsLoginRequired] = useState(false)
   const verifyTokenMut = useVerifyTokenMutation()
@@ -40,25 +44,35 @@ export default function BaseScreen() {
       setIsLoginRequired(true)
     } else {
 
-      verifyTokenMut.mutate({
+      await verifyTokenMut.mutateAsync({
         token: token
       })
 
 
-      if (verifyTokenMut.error || !verifyTokenMut.data?.result) {
+      if (verifyTokenMut.error) {
         setIsLoginRequired(true)
       } else {
 
-        if (verifyTokenMut.data.user_data.verified) {
+        console.log("Verified mutation data is")
+        console.log(verifyTokenMut.data)
 
+        if (verifyTokenMut.data?.user_data.verified) {
+          console.log("VERIFIED DATA IS")
+          console.log(verifyTokenMut.data)
           updateUserDetails(verifyTokenMut.data.user_data)
+          setIsLoginRequired(false)
         } else {
+          console.log("SETTING IS LOGIN REQUIRED TRUE FROM HERE")
           setIsLoginRequired(true)
         }
 
       }
 
     }
+
+    // console.log("SET IS LOGIN REQUIRED VALUE IS")
+    // console.log(isLoginRequired)
+    //setLoading(false)
 
   }
 
@@ -67,17 +81,21 @@ export default function BaseScreen() {
 
       handleGetUserTokenFromStorage()
 
-      // setTimeout(() => {
-        
-      // SplashScreen.hideAsync();
-      // } , 1000)
     }
-  }, [loaded]);
+  }, [loaded , loading]);
 
   if(!loaded) {
     return null;
   }
 
+
+  // if(loading) {
+  //   return (
+  //     <View>
+  //       <ActivityIndicator/>
+  //     </View>
+  //   )
+  // }
   
 
   if(isLoginRequired) {

@@ -51,12 +51,12 @@ export const useUpdatePlayerStakeMutation = () => {
         },
 
         onSuccess: (data) => {
-            console.log('Login successful:', data);
-            return data
+            console.log('UpdatePlayerStake Mutation successful:', data);
+            return {result: {success: true} }
           },
           onError: (error) => {
             // Handle errors appropriately
-            console.error('Login failed:', error);
+            console.error('UpdatePlayerStake Mutation failed:', error);
             return {result: {success: false} , message: error}
           },
 

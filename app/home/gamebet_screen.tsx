@@ -1,5 +1,5 @@
 import { StyleSheet, Image, Platform, SafeAreaView, ScrollView, View } from 'react-native';
-import  React , {useEffect, useState} from "react"
+import  React , {useCallback, useEffect, useState} from "react"
 import { useUserStore } from '../../store/user_state';
 import { StatusBar } from 'expo-status-bar';
 import AccountInfo from '../../components/AccountInfo';
@@ -9,13 +9,14 @@ import { Account, useAuthorization } from '@/utils/useAuthorization';
 import { HomeNavProps } from '@/utils/HomeParamList';
 import GameBetsList from '@/components/GameBetsList';
 import DisconnectButton from '@/components/DisconnectButton';
-import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
+import { transact, Web3MobileWallet } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
 import { GAME_BET_ROUTE, GET_USER_BETS_ROUTE, NEBULA_BASE_URL } from '@/api/constants';
 import { useQuery } from '@tanstack/react-query';
 import { checkUsdcTokenAccountExists } from '@/rpc/mintTokenAccountCheck';
 import { USDC_MINT_ADDRESS } from '@/constants/const';
 import { useConnection } from '@/utils/ConnectionProvider';
-import { createUSDCMintTokenForUser } from '@/rpc/createUSDCMintTokenAccount';
+import { PublicKey, Transaction } from '@solana/web3.js';
+import { createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } from '@solana/spl-token';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
     const {user_details} = useUserStore()
@@ -29,7 +30,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
       const [pageNo , setPageNo] = useState(0)
       const [tokenAccountCreateModal , setTokenCreateModal] = useState(false)
       const {connection} = useConnection()
-    const {accounts, selectedAccount , authorizeSessionWithSignIn , deauthorizeSession} = useAuthorization();
+    const {accounts, selectedAccount , authorizeSessionWithSignIn , deauthorizeSession ,authorizeSession} = useAuthorization();
 
 
     const fetchUserBets = async () => {
@@ -79,28 +80,89 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
 
     
 
+   
+
+
+    const  createUSDCMintTokenForUser = useCallback(
+      async (wallet_address: PublicKey) => {
+        let signedTransactions = await transact(
+          async (wallet: Web3MobileWallet) => {
+            const [authorizationResult, latestBlockhash] = await Promise.all([
+              deauthorizeSession(wallet),
+              connection.getLatestBlockhash(),
+            ]);
+            
+  
+            
+            let ata = await getAssociatedTokenAddress(
+              USDC_MINT_ADDRESS, // mint
+              wallet_address, // owner
+            );
+        
+           let create_usdc_token_address_ix = createAssociatedTokenAccountInstruction(wallet_address , ata ,wallet_address, USDC_MINT_ADDRESS)
+  
+  
+  
+            const incrementTransaction = new Transaction({
+              ...latestBlockhash,
+              feePayer: authorizationResult.publicKey,
+            }).add(create_usdc_token_address_ix);
+  
+            // Sign a transaction and receive
+            const signedTransactions = await wallet.signTransactions({
+              transactions: [incrementTransaction],
+            });
+  
+            return signedTransactions[0];
+          }
+        );
+  
+        let txSignature = await connection.sendRawTransaction(
+          signedTransactions.serialize(),
+          {
+            skipPreflight: true,
+          }
+        );
+  
+        const confirmationResult = await connection.confirmTransaction(
+          txSignature,
+          "confirmed"
+        );
+  
+        if (confirmationResult.value.err) {
+          throw new Error(JSON.stringify(confirmationResult.value.err));
+        } else {
+          console.log("Transaction successfully submitted!");
+        }
+      },
+      [authorizeSession, connection]
+    );
+
+
     useEffect(() => {
 
-    const checkMintTokenAccountAndFetchBets = async () => {
-      if(selectedAccount !== undefined && selectedAccount !== null) {
-        let response = await checkUsdcTokenAccountExists(connection  , selectedAccount.publicKey.toString())
-
-        if (response.exists) {
-          refetch()
-        } else {
-          setTokenCreateModal(true)
-          await createUSDCMintTokenForUser(selectedAccount.publicKey).then(() => {
-            setTokenCreateModal(false)
-          refetch()
-          })
+      const checkMintTokenAccountAndFetchBets = async () => {
+        if(selectedAccount !== undefined && selectedAccount !== null) {
+          let response = await checkUsdcTokenAccountExists(connection  , selectedAccount.publicKey.toString())
+  
+          if (response.exists) {
+            refetch()
+          } else {
+            setTokenCreateModal(true)
+            await createUSDCMintTokenForUser(selectedAccount.publicKey).then(() => {
+              setTokenCreateModal(false)
+            refetch()
+            })
+          }
         }
       }
-    }
-
-    checkMintTokenAccountAndFetchBets()
-      
-
-    } , [selectedAccount])
+  
+      checkMintTokenAccountAndFetchBets()
+        
+  
+      } , [selectedAccount])
+  
+  
 
   return (
    <SafeAreaView style={{width: "100%" , height:"100%"}}>

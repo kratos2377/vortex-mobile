@@ -111,7 +111,7 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
       console.log("Final Code is")
       console.log(final_code)
 
-      verifyCode.mutate({
+      await verifyCode.mutateAsync({
         user_key: final_code,
         id: user_details.id
       })
@@ -152,7 +152,7 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
 
     }
 
-    const handleResendCode = () => {
+    const handleResendCode = async () => {
       // Clear the current inputs
       if (resendCount >= 3) {
         alert("Maximum resend attempts reached. Please contact support.");
@@ -160,7 +160,7 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
       }
 
 
-      sendEmail.mutate({
+      await sendEmail.mutateAsync({
         to_email: user_details.email,
         id: user_details.id
       })

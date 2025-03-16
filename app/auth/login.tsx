@@ -60,20 +60,29 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
         setRequestSent(true)
         setIsLoading(true)
 
-  login.mutate({
+        console.log("CREDS ARE")
+        console.log(usernameoremail)
+        console.log(password)
+
+   login.mutate({
             usernameoremail: usernameoremail,
-            password: password
+            pwd: password
           });
 
 
           if (login.error) {
+
+            console.log("LOGIN ERROR IS FROM HERE 1")
             setType("error")
             setMessage("Some Error Occured")
             setShowAlert(true)
-
+            console.log(login.error)
 
           } else {
             if ( !login.data?.result.success) {
+              console.log("LOGIN RESPONSE IN SCREEN IS")
+              console.log(login)
+              console.log("LOGIN ERROR IS FROM HERE 2")
               setType("error")
               setMessage("Some Error Occured")
               setShowAlert(true)
@@ -89,7 +98,7 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
           //    await save_user_details(login.data.token , login.data.user.id)
               if (!login.data.user.verified) {
 
-                sendEmail.mutate({
+               await sendEmail.mutateAsync({
                   to_email: login.data.user.email,
                   id: login.data.user.id
                 })
@@ -212,7 +221,7 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
 
       <View style={styles.registerContainer}>
         <Text style={styles.registerText}>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('verification_screen')}>
+        <TouchableOpacity onPress={() => navigation.replace('registration')}>
           <Text style={styles.registerLink}>Register</Text>
         </TouchableOpacity>
       </View>

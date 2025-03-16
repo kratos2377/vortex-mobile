@@ -135,7 +135,7 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
       setRequestSent(true);
       // Simulate API call
 
-        registration.mutate({
+        await registration.mutateAsync({
           username: username,
           email: email,
           first_name: first_name,
@@ -167,7 +167,7 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
               if (!registration.data.user.verified) {
 
 
-                sendEmail.mutate({
+               await sendEmail.mutateAsync({
                   to_email: registration.data.user.email,
                   id: registration.data.user.id
                 })

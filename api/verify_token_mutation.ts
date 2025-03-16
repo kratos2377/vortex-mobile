@@ -56,7 +56,8 @@ export const useVerifyTokenMutation = () => {
 
         onSuccess: (data) => {
             console.log('Verify Token Mutation successful:' );
-            return {result: { success: true} , data: data}
+            console.log(data)
+            return {result: { success: true} , data: data.user_data}
           },
           onError: (error) => {
             // Handle errors appropriately

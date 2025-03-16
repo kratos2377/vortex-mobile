@@ -51,7 +51,7 @@ export const usePublishUserStake = () => {
         },
 
         onSuccess: (data) => {
-            console.log('Login successful:', data);
+            console.log('Publish user stake successful:', data);
             return data
           },
           onError: (error) => {
