@@ -3,8 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-
-
+import * as SplashScreen from 'expo-splash-screen';
 import { getUserTokenFromStorage } from '../store/store';
 import React from 'react';
 import LoginScreen from './auth/login';
@@ -20,7 +19,7 @@ import { handleVerifyTokenMutation } from '@/api/verify_token_mutation';
 import { UserModel } from '@/store/models';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-// SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync();
 
 export default function BaseScreen() {
   const Stack = createNativeStackNavigator<AuthParamList>();
@@ -65,8 +64,6 @@ export default function BaseScreen() {
         setIsLoginRequired(true)
       } else {
 
-        console.log("Verified mutation data is")
-        console.log(verify_token_res)
 
         if (verify_token_res.user_data.verified) {
           
@@ -84,7 +81,6 @@ export default function BaseScreen() {
               
           setIsLoginRequired(false)
         } else {
-          console.log("SETTING IS LOGIN REQUIRED TRUE FROM HERE")
           setIsLoginRequired(true)
         }
 
@@ -96,6 +92,9 @@ export default function BaseScreen() {
     // console.log(isLoginRequired)
     //setLoading(false)
 
+    setTimeout(async () => {
+      await SplashScreen.hideAsync();
+    } , 1000)
   }
 
   useEffect( () => {

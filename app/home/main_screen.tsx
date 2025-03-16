@@ -38,7 +38,8 @@ const MainScreen = ({ navigation, route }: HomeNavProps<'main_screen'>) => {
             color={color}
             size={26}
           />
-        )
+        ),
+        unmountOnBlur: true
       }}
     />
 

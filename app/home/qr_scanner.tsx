@@ -49,8 +49,12 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
           result.assets[0].uri
         );
  
- 
+        
         const dataNeeded = scannedResults[0].data;
+
+        Vibration.vibrate();
+        console.log("Scanned image data is")
+        console.log(dataNeeded)
         setDisplayText(dataNeeded)
       } catch (error) {
  // if there this no QR code
@@ -61,10 +65,11 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
   };
 
   const handleBarCodeScanned = async ({ data }: {data: string}) => {
-    Vibration.vibrate();
     if (selectedAccount === undefined || selectedAccount === null) {
       setShowModal(true)
     } else {
+
+      Vibration.vibrate();
       console.log("data from qr scanner is: ", data);
 
       navigation.push("bet_screen", {
@@ -85,12 +90,8 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
     Linking.openSettings();
   };
 
-  function toggleCameraType() {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-  }
 
-
-  if (hasCameraPermission?.granted) {
+  if (hasCameraPermission) {
     return (
       <PaperProvider>
         <Modal visible={showModal} onDismiss={hideModal} contentContainerStyle={containerStyle}>
@@ -110,7 +111,7 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
 
       <View style={styles.boxContainer}>
         <View style={{marginBottom:50}}>
-          <Text style={{height:40, width: 300, backgroundColor:'white',marginBottom:20}}>{displayText}</Text>
+        
           <Button title='Pick from gallery' onPress={pickImage}/>
         </View>
       </View>
@@ -128,8 +129,9 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
 
   return (
     <SafeAreaView>
-      <View>
+      <View style={{flex: 1, flexDirection: "column" , alignContent: "center"}}>
         <Text>Enable Camera Permissions to scan QR codes</Text>
+        <Button onPress={goToSettings} title='Open Settings'/>
       </View>
     </SafeAreaView>
   )
