@@ -1,8 +1,5 @@
-import { useMutation } from "@tanstack/react-query"
 import { MESSIER_BASE_URL, USER_AUTH_ROUTE, USER_SEND_EMAIL_ROUTE } from "./constants";
-import { save_user_details } from "../store/store";
-import { UserModel } from "../store/models";
-import { useUserStore } from "../store/user_state";
+import axios from "axios";
 
 export interface SendEmailCredentials {
     to_email: string;
@@ -17,47 +14,23 @@ result: {
 }
   
   
-export const useSendEmailMutation = () => {
+export const handleSendEmailMutation = async (credentials: SendEmailCredentials) => {
 
-    const {user_details} = useUserStore()
-
-    const sendEmailMutation = useMutation({
-        mutationFn: async (credentials: SendEmailCredentials) => {
-            const response = await fetch(
-                MESSIER_BASE_URL + USER_AUTH_ROUTE + USER_SEND_EMAIL_ROUTE,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(credentials)
-                }
+        try {
+            const response = await axios.post(
+                MESSIER_BASE_URL + USER_AUTH_ROUTE + USER_SEND_EMAIL_ROUTE, credentials
             )
 
+        if (response.status === 200 || response.status === 201) {
 
-            if (!response.ok) {
-                // Handle HTTP errors
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-        
-              const data = await response.json() as SendEmailResponse;
-                          
-              return data;
-        },
+                const recv_data = response.data as SendEmailResponse
+                return recv_data
+            } else {
+                    return {result: {success: false} , error_message: response.data.error_message}
+            }
 
-        onSuccess: () => {
-            console.log('Send Email Mutation successful:' );
-            return {result: { success: true} }
-          },
-          onError: (error) => {
-            // Handle errors appropriately
-            console.error('Send Email Mutation failed:', error);
-            return {result: {success: false} , message: error}
-          },
+        } catch(err) {
+            return {result: {success: false} , error_message: "Some Error Occured"}
+        }
 
-
-        
-    })
-
-    return sendEmailMutation;
 }

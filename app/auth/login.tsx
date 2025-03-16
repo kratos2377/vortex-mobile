@@ -21,11 +21,13 @@ import {
 } from 'react-native-paper';
 
 import React from "react"
-import { useLogin } from "../../api/login_mutation"
 import { AuthNavProps } from "@/utils/AuthParamList"
 import { save_user_details } from "@/store/store";
 import AlertMessage from "@/components/AlertMessage";
-import { useSendEmailMutation } from "@/api/send_email_mutation";
+import { handleLoginCall } from "@/api/login_mutation";
+import { useUserStore } from "@/store/user_state";
+import { UserModel } from "@/store/models";
+import { handleSendEmailMutation } from "@/api/send_email_mutation";
 
 
 
@@ -45,8 +47,6 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
     const [requestSent , setRequestSent] = useState(false)
     const [usernameoremail , setUsernameOrEmail] = useState("")
     const [password , setPassword] = useState("")
-    const login = useLogin()
-    const sendEmail = useSendEmailMutation()
     const [isLoading, setIsLoading] = useState(false);
     const [usernameoremailError, setUsernameorEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
@@ -54,7 +54,10 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
     const [showAlert , setShowAlert] = useState(false)
     const [message , setMessage] = useState("")
     const [type , setType] = useState<"success" | "error">("success")
-    const handleLoginCall = async () => {
+    const {updateUserDetails} = useUserStore()
+
+
+    const handleLoginFormCall = async () => {
         console.log("Handle Login Call")
 
         setRequestSent(true)
@@ -64,47 +67,50 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
         console.log(usernameoremail)
         console.log(password)
 
-   login.mutate({
-            usernameoremail: usernameoremail,
-            pwd: password
-          });
 
+        let login_response = await handleLoginCall({
+          usernameoremail: usernameoremail,
+          pwd: password
+        })
 
-          if (login.error) {
+          if (!login_response.result.success) {
 
             console.log("LOGIN ERROR IS FROM HERE 1")
             setType("error")
             setMessage("Some Error Occured")
             setShowAlert(true)
-            console.log(login.error)
+
+            setTimeout(() => {
+              setShowAlert(false)
+            } , 1000)
 
           } else {
-            if ( !login.data?.result.success) {
-              console.log("LOGIN RESPONSE IN SCREEN IS")
-              console.log(login)
-              console.log("LOGIN ERROR IS FROM HERE 2")
-              setType("error")
-              setMessage("Some Error Occured")
-              setShowAlert(true)
 
-              setTimeout(() => {
-                setShowAlert(false)
-              } , 1000)
-
-            } else {
-
+            let user_mod: UserModel = {
+              id: login_response.data!.id,
+              username: login_response.data!.username,
+              email: login_response.data!.email,
+              first_name: login_response.data!.first_name,
+              last_name: login_response.data!.last_name,
+              score: login_response.data!.score,
+              verified: login_response.data!.verified
+          }
+   
+            updateUserDetails(user_mod)
     
 
           //    await save_user_details(login.data.token , login.data.user.id)
-              if (!login.data.user.verified) {
+              if (!login_response.data?.verified) {
 
-               await sendEmail.mutateAsync({
-                  to_email: login.data.user.email,
-                  id: login.data.user.id
+         
+
+                let send_email_res = await handleSendEmailMutation({
+                  to_email: login_response.data!.email,
+                  id: login_response.data!.id
                 })
+ 
 
-
-                if (sendEmail.error || !sendEmail.data?.result) {
+                if (!send_email_res.result.success) {
                   setType("error")
                   setMessage("Some Error Occured while sending verification code")
                   setShowAlert(true)
@@ -143,7 +149,7 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
 
 
               }
-            }
+            
           }
          
           
@@ -211,7 +217,7 @@ export default function LoginScreen({ navigation, route }: AuthNavProps<'login'>
 
       <Button
         mode="contained"
-        onPress={handleLoginCall}
+        onPress={handleLoginFormCall}
         style={styles.loginButton}
         loading={isLoading}
         disabled={isLoading}

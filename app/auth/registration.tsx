@@ -21,9 +21,11 @@ import {
 } from 'react-native-paper';
 import { AuthNavProps } from '@/utils/AuthParamList';
 import AlertMessage from '@/components/AlertMessage';
-import { useRegistration } from '@/api/registration_mutation';
 import { save_user_details } from '@/store/store';
-import { useSendEmailMutation } from '@/api/send_email_mutation';
+import { handleSendEmailMutation } from '@/api/send_email_mutation';
+import { handleUserRegistrationCall } from '@/api/registration_mutation';
+import { UserModel } from '@/store/models';
+import { useUserStore } from '@/store/user_state';
 
 
 const theme = {
@@ -64,8 +66,8 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
   const [type , setType] = useState<"success" | "error">("success")
 
 
-  const registration = useRegistration()
-    const sendEmail = useSendEmailMutation()
+  const {updateUserDetails} = useUserStore()
+
 
   const validateForm = () => {
     let isValid = true;
@@ -130,70 +132,86 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
     return isValid;
   };
 
-  const handleRegistrationCall = async () => {
+  const handleRegistrationFormCall = async () => {
     if (validateForm()) {
       setRequestSent(true);
       // Simulate API call
 
-        await registration.mutateAsync({
+
+
+        let registration_res = await handleUserRegistrationCall({
           username: username,
           email: email,
           first_name: first_name,
           last_name: last_name,
           password: confirmPassword
-        })
+    })
 
-          if (registration.error) {
+          if (!registration_res.result.success) {
             setType("error")
-            setMessage("Some Error Occured")
+            setMessage(registration_res.error_message)
             setShowAlert(true)
+
+            setTimeout(() => {
+              setShowAlert(false)
+            } , 1000)
 
 
           } else {
-            if ( !registration.data?.result.success) {
-              setType("error")
-              setMessage("Some Error Occured")
-              setShowAlert(true)
-
-              setTimeout(() => {
-                setShowAlert(false)
-              } , 1000)
-
-            } else {
               setType("success")
               setMessage("Registration Successful!")
               setShowAlert(true)
+
+                let user_mod: UserModel = {
+                  id: registration_res.user.id,
+                  username: registration_res.user.username,
+                  email: registration_res.user.email,
+                  first_name: registration_res.user.first_name,
+                  last_name: registration_res.user.last_name,
+                  score: registration_res.user.score,
+                  verified: registration_res.user.verified
+              }
+        
+                updateUserDetails(user_mod)
+                  
+
+              
+              setTimeout(() => {
+                setShowAlert(false)
+              } , 1000)
             //  await save_user_details(registration.data.token , registration.data.user.id)
-              if (!registration.data.user.verified) {
+              if (!registration_res.user.verified) {
 
 
-               await sendEmail.mutateAsync({
-                  to_email: registration.data.user.email,
-                  id: registration.data.user.id
-                })
-
-                if (sendEmail.error || !sendEmail.data?.result) {
-                  setType("error")
-                  setMessage("Some Error Occured while sending verification code")
-                  setShowAlert(true)
-
-                  setTimeout(() => {
-                    setShowAlert(false)
-                  } , 1000)
-                } else {
-
-
-                  setType("success")
-                  setMessage("Registration Successful! Redirecting to verification screen")
-                  setShowAlert(true)
-
-                  setTimeout(() => {
-                    setShowAlert(false)
-                    navigation.replace("verification_screen")
-                  } , 1000)
-
-                }
-                
+                let send_email_res = await handleSendEmailMutation({
+                               to_email: registration_res.user!.email,
+                               id: registration_res.user!.id
+                             })
+              
+             
+                             if (!send_email_res.result.success) {
+                               setType("error")
+                               setMessage("Some Error Occured while sending verification code")
+                               setShowAlert(true)
+             
+                               setTimeout(() => {
+                                 setShowAlert(false)
+                               } , 1000)
+                 
+                             } else {
+             
+             
+                               
+                               setType("success")
+                               setMessage("Login Successful! Redirecting to verification screen")
+                               setShowAlert(true)
+             
+                               setTimeout(() => {
+                                 setShowAlert(false)
+                                 navigation.replace("verification_screen")
+                               } , 1000)
+               
+                             }
                
 
        
@@ -204,7 +222,7 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
                 } , 1000)
 
               }
-            }
+            
           }
          
           
@@ -324,7 +342,7 @@ export default function Registration({ navigation, route }: AuthNavProps<'regist
             <Button
               mode="contained"
               loading={requestSent}
-              onPress={handleRegistrationCall}
+              onPress={handleRegistrationFormCall}
               style={styles.registerButton}
               icon="account-plus"
             >

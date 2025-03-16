@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import axios from 'axios'
 import { CHECK_STAKE_STATUS_ROUTE, GAME_ROUTE, VORTEX_PUB_SUB_URL } from "./constants";
 
   
@@ -15,48 +15,29 @@ result: {
     success: boolean
 }
 type: string | undefined | null,
-session_id: string
+session_id: string,
+error_message: string |  undefined | null
 }
 
 
-export const useCheckStakeStatusMutation = () => {
+export const handleCheckStatusMutation = async (details: CheckStakeStatusMutation) => {
 
-
-    const checkStakeStatusMutation = useMutation({
-        mutationFn: async (details: CheckStakeStatusMutation) => {
-            const response = await fetch(
-                VORTEX_PUB_SUB_URL + GAME_ROUTE + CHECK_STAKE_STATUS_ROUTE,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(details)
-                }
+        try {
+            
+            const response = await axios.post(
+                VORTEX_PUB_SUB_URL + GAME_ROUTE + CHECK_STAKE_STATUS_ROUTE, details
             )
 
+            const recv_data = response.data as CheckStakeStatusResponse
 
-            if (!response.ok) {
-                // Handle HTTP errors
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-        
-              const data = await response.json() as CheckStakeStatusResponse;
-                          
-              return data;
-        },
-        onSuccess: (data) => {
-            console.log('Login successful:', data);
-            return data
-          },
-          onError: (error) => {
-            // Handle errors appropriately
-            console.error('Login failed:', error);
-            return {result: {success: false} , message: error}
-          },
+            if(response.status === 200 || response.status === 201) {
+                return recv_data
+            } else {
+                return {result: {success: false} , error_message: recv_data.error_message}
+            }
 
-        
-    })
+        } catch(err) {
+            return {result: {success: false} , error_message: "Some Error Occured"}
+        }
 
-    return checkStakeStatusMutation;
 }

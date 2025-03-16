@@ -13,10 +13,11 @@ import MainScreen from './home/main_screen';
 import VerificationScreen from './auth/verification_screen';
 import { AuthParamList } from '@/utils/AuthParamList';
 import { HomeParamList } from '@/utils/HomeParamList';
-import { useVerifyTokenMutation } from '@/api/verify_token_mutation';
 import { useUserStore } from '@/store/user_state';
 import { ActivityIndicator } from 'react-native-paper';
 import { View } from 'react-native';
+import { handleVerifyTokenMutation } from '@/api/verify_token_mutation';
+import { UserModel } from '@/store/models';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();
@@ -32,7 +33,6 @@ export default function BaseScreen() {
   const [loading , setLoading] = useState(true)
 
   const [isLoginRequired , setIsLoginRequired] = useState(false)
-  const verifyTokenMut = useVerifyTokenMutation()
   const {updateUserDetails} = useUserStore()
   const handleGetUserTokenFromStorage = async () => {
     let token = await getUserTokenFromStorage()
@@ -44,22 +44,33 @@ export default function BaseScreen() {
       setIsLoginRequired(true)
     } else {
 
-      await verifyTokenMut.mutateAsync({
+
+      let verify_token_res = await handleVerifyTokenMutation({
         token: token
       })
 
 
-      if (verifyTokenMut.error) {
+      if (!verify_token_res.result.success) {
         setIsLoginRequired(true)
       } else {
 
         console.log("Verified mutation data is")
-        console.log(verifyTokenMut.data)
+        console.log(verify_token_res)
 
-        if (verifyTokenMut.data?.user_data.verified) {
-          console.log("VERIFIED DATA IS")
-          console.log(verifyTokenMut.data)
-          updateUserDetails(verifyTokenMut.data.user_data)
+        if (verify_token_res.user_data.verified) {
+          
+          let user_mod: UserModel = {
+            id: verify_token_res.user_data.id,
+            username: verify_token_res.user_data.username,
+            email: verify_token_res.user_data.email,
+            first_name: verify_token_res.user_data.first_name,
+            last_name: verify_token_res.user_data.last_name,
+            score: verify_token_res.user_data.score,
+            verified: verify_token_res.user_data.verified
+        }
+  
+          updateUserDetails(user_mod)
+              
           setIsLoginRequired(false)
         } else {
           console.log("SETTING IS LOGIN REQUIRED TRUE FROM HERE")

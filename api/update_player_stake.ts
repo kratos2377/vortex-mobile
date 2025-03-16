@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { CHECK_STAKE_STATUS_ROUTE, GAME_ROUTE, UPDATE_PLAYER_STAKE_ROUTE, VORTEX_PUB_SUB_URL } from "./constants";
 
   
@@ -23,45 +23,25 @@ message: string
 }
 
 
-export const useUpdatePlayerStakeMutation = () => {
+export const handleUpdatePlayerStakeMutation = async (details: UpdatePlayerStakeMutation) => {
 
-
-    const updatePlayerStakeResponse = useMutation({
-        mutationFn: async (details: UpdatePlayerStakeMutation) => {
-            const response = await fetch(
-                VORTEX_PUB_SUB_URL + GAME_ROUTE + UPDATE_PLAYER_STAKE_ROUTE,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(details)
-                }
-            )
-
-
-            if (response.status.toString() !== "200" && response.status.toString() !== "201") {
-                // Handle HTTP errors
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
+    try {
         
-              const data = await response.json() as UpdatePlayerStakeResponse;
-                          
-              return data;
-        },
+        const response = await axios.post(
+            VORTEX_PUB_SUB_URL + GAME_ROUTE + UPDATE_PLAYER_STAKE_ROUTE, details
+        )
 
-        onSuccess: (data) => {
-            console.log('UpdatePlayerStake Mutation successful:', data);
-            return {result: {success: true} }
-          },
-          onError: (error) => {
-            // Handle errors appropriately
-            console.error('UpdatePlayerStake Mutation failed:', error);
-            return {result: {success: false} , message: error}
-          },
 
-        
-    })
+    if (response.status === 200 || response.status === 201) {
 
-    return updatePlayerStakeResponse;
+            const recv_data = response.data as UpdatePlayerStakeResponse
+            return recv_data
+        } else {
+                return {result: {success: false} , error_message: response.data.error_message}
+        }
+    } catch(err) {
+        return {result: {success: false} , error_message: "Some Error Occured"}
+    }
+
+
 }

@@ -13,10 +13,10 @@ import {
   StatusBar
 } from 'react-native';
 import { Surface, Text, Button } from "react-native-paper";
-import { useSendEmailMutation } from '@/api/send_email_mutation';
-import { useVerifyCodeMutation } from '@/api/verify_code_mutation';
 import { useUserStore } from '@/store/user_state';
 import AlertMessage from '@/components/AlertMessage';
+import { handleSendEmailMutation } from '@/api/send_email_mutation';
+import { handleVerifyCodeMutation } from '@/api/verify_code_mutation';
 
 const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_screen'>) => {
   const { fn } = route.params
@@ -47,8 +47,6 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
     const [message , setMessage] = useState("")
     const [type , setType] = useState<"success" | "error">("success")
 
-    const sendEmail = useSendEmailMutation()
-    const verifyCode = useVerifyCodeMutation()
 
     const onChangeCode = (text: string, index: number) => {
       // If pasting a full code
@@ -111,13 +109,14 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
       console.log("Final Code is")
       console.log(final_code)
 
-      await verifyCode.mutateAsync({
+
+      let verify_code_res = await handleVerifyCodeMutation({
         user_key: final_code,
         id: user_details.id
       })
       
 
-      if (verifyCode.error || !verifyCode.data?.result) {
+      if (!verify_code_res.result.success) {
 
         setType("error")
         setMessage("Some Error Occured while verifying code")
@@ -147,7 +146,7 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
         setIsLoading(false);
         // Here you would handle verification success
         // navigation.navigate('home'); // Navigate to home or next screen
-      }, 2000);
+      }, 900);
 
 
     }
@@ -160,11 +159,12 @@ const VerificationScreen = ({ navigation, route }: AuthNavProps<'verification_sc
       }
 
 
-      await sendEmail.mutateAsync({
-        to_email: user_details.email,
-        id: user_details.id
-      })
       
+    let send_email_res = await handleSendEmailMutation({
+      to_email: user_details.email,
+      id: user_details.id
+                  })
+
       // Increase counter and reset codes
       setResendCount(prev => prev + 1);
       setCodes(Array(6).fill(""));

@@ -1,9 +1,6 @@
-import { useMutation } from "@tanstack/react-query"
+import axios from 'axios'
 import { MESSIER_BASE_URL, USER_AUTH_ROUTE, USER_LOGIN_ROUTE } from "./constants";
-import { save_user_details } from "../store/store";
-import { UserModel } from "../store/models";
-import { useUserStore } from "../store/user_state";
-
+import { save_user_details } from '@/store/store';
 export interface LoginCredentials {
     usernameoremail: string;
     pwd: string;
@@ -28,69 +25,34 @@ user: {
 }
   
   
-export const useLogin = () => {
+export const handleLoginCall = async (credentials: LoginCredentials) => {
 
-    const {updateUserDetails} = useUserStore()
+    try {
 
-    const loginMutation = useMutation({
-        mutationFn: async (credentials: LoginCredentials) => {
-          let res = await fetch(
-                MESSIER_BASE_URL + USER_AUTH_ROUTE + USER_LOGIN_ROUTE,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(credentials)
-                }
-            )
-
-            console.log("RESPONSE FOR LOGIN AUTH ROUTE IS")
-            console.log(res)
-            return res
+     const res =    await axios.post(
+            MESSIER_BASE_URL + USER_AUTH_ROUTE + USER_LOGIN_ROUTE, credentials
+        )
 
 
-           
-        },
+        if (res.status === 200 || res.status === 201) {
 
-        onSuccess: async (data) => {
-            console.log('Login successful:', data);
+            console.log("Recieved data for login is")
+            console.log(res.data)
 
-            const user_data = await data.json() as LoginResponse;
-
-            console.log("Login response is")
-            console.log(user_data)
-          
-            save_user_details(user_data.token , user_data.user.id)
+            let recv_data = res.data as LoginResponse
             
-            let user_mod: UserModel = {
-                id: user_data.user.id,
-                username: user_data.user.username,
-                email: user_data.user.email,
-                first_name: user_data.user.first_name,
-                last_name: user_data.user.last_name,
-                score: user_data.user.score,
-                verified: user_data.user.verified
-            }
+            save_user_details(recv_data.token , recv_data.user.id)
 
-            updateUserDetails(user_mod)
+            return {result: { success: true} , data: recv_data.user}
 
-            return Promise.all([{result: { success: true} , data: user_data.user}])
-          },
-          onError: (error) => {
-            // Handle errors appropriately
-            console.error('Login failed:', error);
-        
-            return Promise.all([{result: {success: false} , message: error}])
-          },
+        } else {
+            return {result: {success: false} , error_message: "Invalid Credentials"}
+        }
 
 
-        
-    },
-
-    
-)
-
-    return loginMutation;
+    } catch(err) {
+        return {result: {success: false} , error_message: "Some Error Occured"}
+    }
+ 
+            
 }

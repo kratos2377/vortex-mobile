@@ -11,12 +11,12 @@ import GameBetsList from '@/components/GameBetsList';
 import DisconnectButton from '@/components/DisconnectButton';
 import { transact, Web3MobileWallet } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
 import { GAME_BET_ROUTE, GET_USER_BETS_ROUTE, NEBULA_BASE_URL } from '@/api/constants';
-import { useQuery } from '@tanstack/react-query';
 import { checkUsdcTokenAccountExists } from '@/rpc/mintTokenAccountCheck';
 import { USDC_MINT_ADDRESS } from '@/constants/const';
 import { useConnection } from '@/utils/ConnectionProvider';
 import { PublicKey, Transaction } from '@solana/web3.js';
 import { createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } from '@solana/spl-token';
+import axios from 'axios';
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
     const {user_details} = useUserStore()
@@ -30,30 +30,45 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
       const [pageNo , setPageNo] = useState(0)
       const [tokenAccountCreateModal , setTokenCreateModal] = useState(false)
       const {connection} = useConnection()
+      const [isLoading , setIsLoading] = useState(false)
+      const [gameBetsList , setGameBetsList] = useState([]) 
     const {accounts, selectedAccount , authorizeSessionWithSignIn , deauthorizeSession ,authorizeSession} = useAuthorization();
 
 
     const fetchUserBets = async () => {
+      setIsLoading(true)
       if(selectedAccount === null || selectedAccount === undefined) {
+        setTimeout(() => {
+          setIsLoading(false)
+        } , 1000)
         return []
       }
 
-      const response = await fetch(NEBULA_BASE_URL + GAME_BET_ROUTE + GET_USER_BETS_ROUTE + "/" + user_details.id + "/" + 
+      const response = await axios.get(NEBULA_BASE_URL + GAME_BET_ROUTE + GET_USER_BETS_ROUTE + "/" + user_details.id + "/" + 
         selectedAccount!.publicKey.toString() + "/" + pageNo.toString() );
-      
-      // Check if the request was successful
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      
-      return response.json();
+        console.log("RESPONSE FROM GAME BETS API IS")
+        console.log(response)
+        if(response.status === 200 || response.status == 201) {
+
+        // will set game bets here
+
+    
+
+          setTimeout(() => {
+            setIsLoading(false)
+          } , 1000)
+
+        } else {
+          setTimeout(() => {
+            setIsLoading(false)
+          } , 1000)
+          return []
+        }
+
+
     };
 
-    const { isLoading, isError, data, error , refetch } = useQuery({
-      queryKey: ['game-bets' , pageNo , selectedAccount?.publicKey],
-      queryFn: fetchUserBets,
-    })
-  
+
 
     const truncatePublickKeyString =  (pub_key: string) => {
       console.log("PUBKEY RECEIVED IS")
@@ -146,12 +161,14 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
           let response = await checkUsdcTokenAccountExists(connection  , selectedAccount.publicKey.toString())
   
           if (response.exists) {
-            refetch()
+            fetchUserBets()
           } else {
             setTokenCreateModal(true)
             await createUSDCMintTokenForUser(selectedAccount.publicKey).then(() => {
               setTokenCreateModal(false)
-            refetch()
+              fetchUserBets()
+            }).catch((err) => {
+              return []
             })
           }
         }
@@ -160,7 +177,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
       checkMintTokenAccountAndFetchBets()
         
   
-      } , [selectedAccount])
+      } , [selectedAccount , pageNo])
   
   
 
