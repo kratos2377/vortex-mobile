@@ -5,8 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
   export const save_user_details = async (token: string, user_id: string) => {
-     AsyncStorage.setItem('user.token' , token)
-     AsyncStorage.setItem('user.id' , user_id)
+    await AsyncStorage.setItem('user.token' , token)
+    await AsyncStorage.setItem('user.id' , user_id)
   }
 
 
@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
     return  await AsyncStorage.getItem('user.token')
   }
 
-  export const deleteDetailsFromStorage = async () => {
-    await AsyncStorage.removeItem('user.token')
-    await AsyncStorage.removeItem('user.id')
+  export const deleteDetailsFromStorage =  async () => {
+    await  AsyncStorage.removeItem('user.token')
+     await AsyncStorage.removeItem('user.id')
   }

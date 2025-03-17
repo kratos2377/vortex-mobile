@@ -2,7 +2,7 @@ import { StyleSheet, Image, Platform, ScrollView, Dimensions, SafeAreaView, View
 import  React , {useEffect, useState} from "react"
 import { useUserStore } from '../../store/user_state';
 import { HomeNavProps } from '@/utils/HomeParamList';
-import { ActivityIndicator, Avatar, Button, Divider, Modal, Portal, Switch } from 'react-native-paper';
+import { ActivityIndicator, Avatar, Button, Divider, Modal, Portal, Surface, Switch } from 'react-native-paper';
 import {Text} from "react-native-paper"
 import { deleteDetailsFromStorage } from '@/store/store';
 
@@ -58,7 +58,7 @@ const handleLogout = async () => {
 
     <Divider/>
 
-    <Button style={{margin: 5}} >
+    <Button style={{margin: 5}} onPress={() => navigation.push("change_password")} >
       Change Password
     </Button>
 
@@ -80,37 +80,42 @@ const handleLogout = async () => {
     <Divider/> */}
 
 
-    <Button  style={{margin: 5}} >
+    <Button  style={{margin: 5}} onPress={() => setShowAskModal(true)}>
      Logout 
     </Button>
 
     <Portal>
         <Modal visible={showAskModal} onDismiss={() => {
           setShowAskModal(false)
-        }} contentContainerStyle={{margin: 2}}>
-          <Text>Are you sure you want to Logout ?</Text>
+        }} contentContainerStyle={{margin: 2 ,  backgroundColor: "#fff" , padding: 5 }}>
+          <Text style={{margin: 5}}>Are you sure you want to Logout ?</Text>
 
-          <View style={{flex: 1, flexDirection: "row" , justifyContent: "flex-end" }}>
+        
 
-          <Button onPress={() => {
+        <Surface style={{flexDirection: "row" , justifyContent: "flex-end" , backfaceVisibility: "hidden"}}>
+        <Button onPress={() => {
           setShowAskModal(false)
-        }} style={{marginRight: 1}}>
+        }} style={{marginRight: 1}} textColor='green'>
             No
           </Button>
 
 
-          <Button style={{marginRight: 2}} onPress={handleLogout}>
+          <Button style={{marginRight: 2}} onPress={() =>  {
+      handleLogout()
+          }}
+          textColor='red'
+          >
             Yes
           </Button>
+        </Surface>
 
-          </View>
         </Modal>
       </Portal>
 
 
        <Portal>
-        <Modal visible={logoutLoadModal} onDismiss={() => {}} contentContainerStyle={{margin: 2}}>
-          <View style={{flex: 1 , flexDirection: "row" }}>
+        <Modal visible={logoutLoadModal} onDismiss={() => {}} contentContainerStyle={{margin: 10  ,  backgroundColor: "#fff" , padding: 5 }}>
+          <View style={{flexDirection: "row"  , margin: 10}}>
 
 
           <Text style={{marginRight: 3}}>

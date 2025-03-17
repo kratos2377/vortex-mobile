@@ -7,7 +7,7 @@ import { EPermissionTypes, usePermissions } from '@/hooks/usePermissions';
 import { HomeNavProps } from '@/utils/HomeParamList';
 import { Camera, CameraType } from 'expo-camera';
 import { useAuthorization } from '@/utils/useAuthorization';
-import { Modal, PaperProvider } from 'react-native-paper';
+import { Modal, PaperProvider, Portal } from 'react-native-paper';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from "expo-image-picker";
 
@@ -93,7 +93,7 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
 
   if (hasCameraPermission) {
     return (
-      <PaperProvider>
+      <Portal>
         <Modal visible={showModal} onDismiss={hideModal} contentContainerStyle={containerStyle}>
         <Text>No Account Selected.</Text>  
         <Text>You have to select a valid account in HomeScreen First. Only then you can bet</Text>
@@ -122,7 +122,7 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
         <View style={styles.scanBox}></View>
       </View>
  </View>
-      </PaperProvider>
+      </Portal>
     );
   }
 

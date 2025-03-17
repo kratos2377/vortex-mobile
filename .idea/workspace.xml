@@ -4,10 +4,22 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0829ac19-03e0-439f-a456-255924e8ccdd" name="Changes" comment="">
+    <list default="true" id="619e9cb5-0393-47d9-a4b6-e9d566072560" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/api/constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/base_screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/base_screen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/home/change_password.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/change_password.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/home/gamebet_screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/gamebet_screen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/home/profile_screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/profile_screen.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/home/qr_scanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/qr_scanner.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/GameBetsCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/GameBetsCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/store/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/store/store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,35 +32,35 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 8
-}</component>
-  <component name="ProjectId" id="2table0KzxaPlwKg87Vumvps1b4" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="2uRnFTbzT7ky3HJ6MIB2g6rbn2y" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;AndroidSdkUpdater&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "settings.editor.selected.configurable": "AndroidSdkUpdater"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0829ac19-03e0-439f-a456-255924e8ccdd" name="Changes" comment="" />
-      <created>1740593285870</created>
+      <changelist id="619e9cb5-0393-47d9-a4b6-e9d566072560" name="Changes" comment="" />
+      <created>1742220151036</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1740593285870</updated>
+      <updated>1742220151036</updated>
     </task>
     <servers />
   </component>

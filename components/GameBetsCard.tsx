@@ -90,8 +90,6 @@ const GameBetCard: React.FC<GameBetProps> = ({ id , gameName , betAmount , statu
 
 const styles = StyleSheet.create({
   card: {
-    marginVertical: 8,
-    marginHorizontal: 16,
     borderRadius: 12,
     elevation: 2,
   },
@@ -99,7 +97,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 5,
   },
   gameName: {
     flex: 1,
@@ -110,7 +108,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   details: {
-    marginBottom: 12,
+    marginBottom: 5,
   },
   detailRow: {
     flexDirection: 'row',

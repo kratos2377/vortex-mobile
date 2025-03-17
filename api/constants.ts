@@ -1,4 +1,4 @@
-export const MESSIER_BASE_URL = process.env.MESSIER_BASE_URL || "https://53e6-2401-4900-1cba-3dc3-87-623c-ede9-94a.ngrok-free.app"
+export const MESSIER_BASE_URL = process.env.MESSIER_BASE_URL || "https://bfb2-2401-4900-1cba-3dc3-f7e7-acdc-8a9b-62bb.ngrok-free.app"
 export const VORTEX_PUB_SUB_URL = process.env.VORTEX_PUB_SUB_URL || "http://localhost:4001"
 export const NEBULA_BASE_URL = process.env.NEBULA_BASE_URL || "http://localhost:3020"
 

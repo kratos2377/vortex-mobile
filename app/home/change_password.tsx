@@ -14,7 +14,7 @@ import {
   Snackbar
 } from 'react-native-paper';
 
-const ChangePasswordScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
+const ChangePasswordScreen = ({ navigation, route }: HomeNavProps<'change_password'>) => {
   const {user_details} = useUserStore()
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');

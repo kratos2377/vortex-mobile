@@ -7,7 +7,6 @@ import SignInButton from '../../components/SignInButton';
 import { Appbar, Button, Menu, Modal, PaperProvider, Portal, Surface, useTheme , Text, ActivityIndicator } from 'react-native-paper';
 import { Account, useAuthorization } from '@/utils/useAuthorization';
 import { HomeNavProps } from '@/utils/HomeParamList';
-import GameBetsList from '@/components/GameBetsCard';
 import DisconnectButton from '@/components/DisconnectButton';
 import { transact, Web3MobileWallet } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
 import { GAME_BET_ROUTE, GET_USER_BETS_ROUTE, NEBULA_BASE_URL } from '@/api/constants';
@@ -19,6 +18,8 @@ import { createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } fr
 import axios from 'axios';
 import { GameBet } from '@/store/models';
 import GameBetCard from '@/components/GameBetsCard';
+import data from "@/data/sample_game_bet.json"
+
 
 export default function GameBetScreen({ navigation, route }: HomeNavProps<'gamebet_screen'>) {
     const {user_details} = useUserStore()
@@ -39,12 +40,13 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
 
 
     const fetchUserBets = async () => {
-      setIsLoading(true)
+  
+            setIsLoading(true)
       if(selectedAccount === null || selectedAccount === undefined) {
         setTimeout(() => {
           setIsLoading(false)
         } , 1000)
-        return []
+        // return []
       }
 
 
@@ -61,7 +63,14 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
           // will set game bets here
             console.log("Game Bets response is")
             console.log(response.data.game_bets)
-            setGameBetsList([...response.data.game_bets])
+
+            const transformedData = response.data.game_bets.map((bet: any) => ({
+              ...bet,
+              created_at: new Date(bet.created_at),
+              updated_at: new Date(bet.updated_at)
+            }));
+
+            setGameBetsList([...transformedData])
   
             setTimeout(() => {
               setIsLoading(false)
@@ -72,7 +81,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
             setTimeout(() => {
               setIsLoading(false)
             } , 1000)
-            return []
+          //  return []
           }
   
       } catch(err) {
@@ -82,7 +91,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
         setTimeout(() => {
           setIsLoading(false)
         } , 1000)
-        return []
+     //   return []
       }
 
     };
@@ -179,12 +188,12 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
         console.log(response)
         if (response.exists) {
           console.log("FETCHING BETS")
-          fetchUserBets()
+       let fetch_res =   await fetchUserBets()
         } else {
           setTokenCreateModal(true)
-          await createUSDCMintTokenForUser(selectedAccount.publicKey).then(() => {
+          await createUSDCMintTokenForUser(selectedAccount.publicKey).then( async () => {
             setTokenCreateModal(false)
-            fetchUserBets()
+            let fetch_res =   await fetchUserBets()
           }).catch((err) => {
             return []
           })
@@ -194,7 +203,7 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
 
     const onRefresh =async  () => {
       setRefreshing(true);
-      fetchUserBets()
+      let fetch_res =   await fetchUserBets()
       setTimeout(() => {
 
         setRefreshing(false);
@@ -203,7 +212,10 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
 
 
     useEffect(() => {
+      if(selectedAccount !== undefined && selectedAccount !== null) {
+
       checkMintTokenAccountAndFetchBets()
+      }
       } , [selectedAccount , pageNo])
   
   
@@ -248,12 +260,28 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
   </Appbar.Header>
      
 
-            <Surface>
-            {accounts && selectedAccount ? (
+          
+  {accounts && selectedAccount ? (
             
-              isLoading ? <ActivityIndicator animating={true}/> :         gameBetsList.length === 0 ? <View style={{flex: 1 , justifyContent: "center"}}>
-                <Text>No GameBets Found for this user and selected account</Text>
-              </View> :     <ScrollView
+              isLoading ? <ActivityIndicator animating={true}/> :         gameBetsList.length === 0 ? 
+              
+              <ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  colors={['grey']}
+                  progressBackgroundColor={'black'}
+                />
+              }
+              >
+                <View style={{flex: 1 , justifyContent: "center"}}>
+                <Text style={{flex:1 , justifyContent: "center" , flexDirection: "column"}}>No GameBets Found for this user and selected account</Text>
+              </View>
+              </ScrollView>
+              
+              
+              :     <ScrollView
               contentContainerStyle={styles.scrollView}
               refreshControl={
                 <RefreshControl
@@ -278,7 +306,6 @@ export default function GameBetScreen({ navigation, route }: HomeNavProps<'gameb
             </SignInButton>
           </View>
         )}
-            </Surface>
         
 
       <Portal>

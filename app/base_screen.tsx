@@ -17,6 +17,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import { View } from 'react-native';
 import { handleVerifyTokenMutation } from '@/api/verify_token_mutation';
 import { UserModel } from '@/store/models';
+import ChangePasswordScreen from './home/change_password';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -160,6 +161,11 @@ export default function BaseScreen() {
       initialParams={{ fn: handleGetUserTokenFromStorage }}
       />
   
+
+  <MainStack.Screen name="change_password" component={ChangePasswordScreen}   options={{
+        headerShown: false
+      }}
+      />
       </MainStack.Navigator>
       </NavigationContainer>
 
