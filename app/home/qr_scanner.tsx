@@ -10,15 +10,20 @@ import { useAuthorization } from '@/utils/useAuthorization';
 import { Modal, PaperProvider, Portal } from 'react-native-paper';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from "expo-image-picker";
+import { handleCheckStatusMutation } from '@/api/check_stake_status_mutation';
+import { useUserStore } from '@/store/user_state';
 
 export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_scanner'>) {
+  const {user_details} = useUserStore()
   const [type, setType] = useState(CameraType.back);
   const [displayText, setDisplayText]= useState("");
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const {selectedAccount} = useAuthorization()
   const [showModal , setShowModal] = useState(false)
+  const [errorModal , setErrorModal] = useState(false)
 
   const hideModal = () => setShowModal(false);
+  const hideErrorModal = () => setErrorModal(false);
   const containerStyle = {backgroundColor: 'white'};
 
 
@@ -70,18 +75,36 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
     } else {
 
       Vibration.vibrate();
+
       console.log("data from qr scanner is: ", data);
 
-      navigation.push("bet_screen", {
+      let check_status_response  = await handleCheckStatusMutation({
+        user_who_is_betting: user_details.id,
+        user_betting_on: data.user_who_is_betting,
         game_id: data.game_id,
-        user_betting_on: data.user_betting_on,
-        user_who_is_betting: data.user_who_is_betting,
-        is_player: data.is_player,
-        is_replay: data.is_replay,
-        bet_type: data.bet_type,
-        session_id: data.session_id,
-        is_match: data.is_match,
+        bet_type: data.bet_type
       })
+
+
+      if(check_status_response.result.success) {
+        navigation.push("bet_screen", {
+          game_id: data.game_id,
+          user_betting_on: data.user_betting_on,
+          user_who_is_betting: user_details.id,
+          is_player: data.is_player,
+          is_replay: data.is_replay,
+          bet_type: data.bet_type,
+          session_id: check_status_response.data.session_id,
+          event_type: data.is_player ? null : check_status_response.data.type,
+          is_match: data.is_match,
+        })
+      } else {
+
+        setErrorModal(true)
+
+
+      }
+
     }
 
   };
@@ -98,6 +121,12 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
         <Text>No Account Selected.</Text>  
         <Text>You have to select a valid account in HomeScreen First. Only then you can bet</Text>
         </Modal>
+
+        <Modal visible={errorModal} onDismiss={hideErrorModal} contentContainerStyle={containerStyle}>
+        <Text>Error while placing bet</Text>  
+        <Text>Either the game is invalid or stake time is over</Text>
+        </Modal>
+
 
         <View style={styles.cameraQRContainer}>
      <Camera
