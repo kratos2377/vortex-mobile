@@ -4,23 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="619e9cb5-0393-47d9-a4b6-e9d566072560" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/api/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/base_screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/base_screen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/home/change_password.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/change_password.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/home/gamebet_screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/gamebet_screen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/home/profile_screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/profile_screen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/home/qr_scanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/qr_scanner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/GameBetsCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/GameBetsCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/store/store.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
-    </list>
+    <list default="true" id="619e9cb5-0393-47d9-a4b6-e9d566072560" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

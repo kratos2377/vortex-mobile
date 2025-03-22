@@ -18,6 +18,7 @@ import { View } from 'react-native';
 import { handleVerifyTokenMutation } from '@/api/verify_token_mutation';
 import { UserModel } from '@/store/models';
 import ChangePasswordScreen from './home/change_password';
+import BetScreen from './home/bet_screen';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,18 +44,6 @@ export default function BaseScreen() {
       //Disabling for now
       setIsLoginRequired(true)
     } else {
-      // let user_mod: UserModel = {
-      //         id: "8a1f9d34-5086-4994-a89f-923f87824761",
-      //         username: "necromorph23",
-      //         email: "shobityadav23@gmail.com",
-      //         first_name: "Shobhit",
-      //         last_name: "Yadav",
-      //         score: 300,
-      //         verified: true
-      //     }
-    
-      //       updateUserDetails(user_mod)
-      // setIsLoginRequired(false)
 
       let verify_token_res = await handleVerifyTokenMutation({
         token: token
@@ -163,6 +152,11 @@ export default function BaseScreen() {
   
 
   <MainStack.Screen name="change_password" component={ChangePasswordScreen}   options={{
+        headerShown: false
+      }}
+      />
+
+<MainStack.Screen name="bet_screen" component={BetScreen}   options={{
         headerShown: false
       }}
       />

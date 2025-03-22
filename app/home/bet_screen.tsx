@@ -18,12 +18,14 @@ import { UseVortexAppProgram } from '@/utils/useVortexAppProgram';
 import SuccessLogoCheck from '@/components/SuccessLogoCheck';
 import ErrorLogoCross from '@/components/ErrorLogoCross';
 import { useConnection } from '@/utils/ConnectionProvider';
+import { handleUpdatePlayerStakeMutation } from '@/api/update_player_stake';
+import { handlePublishUserStakeMutation } from '@/api/publish_user_stake';
 
 
 const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
 
     const {user_details} = useUserStore()
-    const {game_id  , user_betting_on , user_who_is_betting , is_player , is_replay, bet_type , session_id , is_match} = route.params
+    const {game_id  , user_betting_on , user_who_is_betting , is_player , is_replay, bet_type , session_id , is_match , event_type} = route.params
     const { authorizeSession, selectedAccount } = useAuthorization();
     const {vortexAppProgram} = UseVortexAppProgram(selectedAccount!.publicKey)
       const {connection} = useConnection()
@@ -63,13 +65,33 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
         setLoading(true)
 
         if (is_player) {
-            await initializePlayerBet(vortexAppProgram , session_id , parseFloat(amount))
-        } else {
-          await initializeUserGameBet(vortexAppProgram , session_id ,  parseFloat(amount) )
-        }
+          let player_bet_res =   await initializePlayerBet(vortexAppProgram , session_id , parseFloat(amount))
+
+          await handleUpdatePlayerStakeMutation({
+            username: user_details.username,
+            user_id: user_details.id,
+            game_id: game_id,
+            bet_type: bet_type,
+            amount: parseFloat(amount),
+            session_id: session_id,
+            wallet_key: selectedAccount!.publicKey.toString(),
+            is_replay: is_replay,
+            is_match: is_match
+          })
+
+          if(!player_bet_res.result.success) {
+            setMessage(player_bet_res.error_message!)
+
+            setTimeout(() => {
+              setShowFinalMessage(true)
+              setSuccessLogo(false)  
+              setLoading(false)
+                
+            } , 1000)
+
+          } else {
 
         setMessage("Bet Initialized Successfully")
-
 
         setTimeout(() => {
           setShowFinalMessage(true)
@@ -77,6 +99,53 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
           setLoading(false)
             
         } , 1000)
+
+          }
+        } else {
+          let user_bet_res = await initializeUserGameBet(vortexAppProgram , session_id ,  parseFloat(amount) )
+
+
+
+          await handlePublishUserStakeMutation({
+            user_username_who_is_betting: user_details.username,
+            user_who_is_betting: user_details.id,
+            user_betting_on: user_betting_on,
+            game_id: game_id,
+            bet_type: bet_type,
+            amount: parseFloat(amount),
+            session_id: session_id,
+            event_type: event_type
+          })
+
+          if(!user_bet_res.result.success) {
+            setMessage(user_bet_res.error_message!)
+
+            setTimeout(() => {
+              setShowFinalMessage(true)
+              setSuccessLogo(false)  
+              setLoading(false)
+                
+            } , 1000)
+
+          } else {
+
+        setMessage("Bet Initialized Successfully")
+
+        setTimeout(() => {
+          setShowFinalMessage(true)
+          setSuccessLogo(true)  
+          setLoading(false)
+            
+        } , 1000)
+
+          }
+
+
+        }
+
+
+
+ 
 
       };
     
@@ -195,9 +264,9 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
           );
     
           if (confirmationResult.value.err) {
-            throw new Error(JSON.stringify(confirmationResult.value.err));
+            return {result: {success: false} , error_message: JSON.stringify(confirmationResult.value.err)}
           } else {
-            console.log("Transaction successfully submitted!");
+            return {result: {success: true} }
           }
         },
         [authorizeSession, connection]
@@ -285,9 +354,9 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
           );
     
           if (confirmationResult.value.err) {
-            throw new Error(JSON.stringify(confirmationResult.value.err));
+            return {result: {success: false} , error_message: JSON.stringify(confirmationResult.value.err)}
           } else {
-            console.log("Transaction successfully submitted!");
+            return {result: {success: true} }
           }
         },
         [authorizeSession, connection]
@@ -373,9 +442,9 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
           );
     
           if (confirmationResult.value.err) {
-            throw new Error(JSON.stringify(confirmationResult.value.err));
+            return {result: {success: false} , error_message: JSON.stringify(confirmationResult.value.err)}
           } else {
-            console.log("Transaction successfully submitted!");
+            return {result: {success: true} }
           }
         },
         [authorizeSession, connection]
@@ -427,7 +496,7 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
 
       <ActivityIndicator animating={true}  />
         {message}
-      </View> :       <KeyboardAvoidingView 
+      </View> :      showFinalMessage ? <></> :  <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.contentContainer}
     >
