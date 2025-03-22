@@ -12,6 +12,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from "expo-image-picker";
 import { handleCheckStatusMutation } from '@/api/check_stake_status_mutation';
 import { useUserStore } from '@/store/user_state';
+import 'text-encoding';
 
 export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_scanner'>) {
   const {user_details} = useUserStore()
@@ -73,7 +74,7 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
  
         setCheckingStatus(true)
         console.log(scannedResults)
-        const dataNeeded = scannedResults[0].data;
+         const dataNeeded = scannedResults[0].data;
 
 
         let parsed_data =  JSON.parse(dataNeeded)
@@ -97,7 +98,7 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
       if(check_status_response.result.success) {
 
       setCheckingStatus(false)
-        navigation.push("bet_screen", {
+        navigation.replace("bet_screen", {
           game_id: parsed_data.game_id,
           user_betting_on: parsed_data.user_betting_on,
           user_who_is_betting: user_details.id,
@@ -159,7 +160,7 @@ export default function QRScannerScreen({ navigation, route }: HomeNavProps<'qr_
       if(check_status_response.result.success) {
 
       setCheckingStatus(false)
-      navigation.push("bet_screen", {
+      navigation.replace("bet_screen", {
         game_id: parsed_data.game_id,
         user_betting_on: parsed_data.user_betting_on,
         user_who_is_betting: user_details.id,

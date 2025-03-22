@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, StatusBar, TextInput, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, StatusBar, TextInput, ActivityIndicator, ScrollView } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { AccountMeta, Connection, PublicKey, SYSVAR_RENT_PUBKEY, Transaction } from '@solana/web3.js';
 import { Program } from "@coral-xyz/anchor";
@@ -20,7 +20,7 @@ import ErrorLogoCross from '@/components/ErrorLogoCross';
 import { useConnection } from '@/utils/ConnectionProvider';
 import { handleUpdatePlayerStakeMutation } from '@/api/update_player_stake';
 import { handlePublishUserStakeMutation } from '@/api/publish_user_stake';
-
+import 'text-encoding';
 
 const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
 
@@ -36,6 +36,7 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
       const [showFinalMessage , setShowFinalMessage] = useState(false)
       const [successLogo , setSuccessLogo] = useState(false)
       const [errorLogo , setErrorLogo] = useState(false)
+      const [errorMessage, setErrorMessage] = useState("")
     
       const handleAmountChange = (text: string) => {
         // Remove any non-numeric characters except the decimal point
@@ -60,6 +61,13 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
       };
     
       const handleStakePress = async () => {
+
+        if (!amount || parseFloat(amount) === 0 || parseFloat(amount) < 0.1) {
+          setErrorMessage("Minimum bet amount is 0.1 USD");
+          return;
+        }
+
+
         // Handle stake functionality here
         setMessage(`Initializing  ${is_player ? "Player" : "User" } Bet`)
         setLoading(true)
@@ -151,7 +159,7 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
     
       const handleBackPress = () => {
         // Go back to previous screen
-        navigation.goBack();
+        navigation.replace("main_screen")
       };
     
 
@@ -484,7 +492,7 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <StatusBar backgroundColor="#6200ee" barStyle="light-content" />
       
       <Appbar.Header>
@@ -492,16 +500,21 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
       </Appbar.Header>
       
     {
-      loading && !showFinalMessage ? <View> 
+      loading && !showFinalMessage ? <View style={{flexDirection: "row" , justifyContent: "center" , margin: 5 , padding: 5}}> 
 
       <ActivityIndicator animating={true}  />
-        {message}
+      <Text>{message}</Text>
       </View> :      showFinalMessage ? <></> :  <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.contentContainer}
     >
       <View style={styles.formContainer}>
         <Text style={styles.title}>Enter Stake Amount</Text>
+
+        {errorMessage ? (
+            <Text style={styles.errorMessage}>{errorMessage}</Text>
+          ) : <></>}
+          
         
         <View style={styles.inputContainer}>
           <TextInput
@@ -530,13 +543,13 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
     {
       showFinalMessage ?  successLogo ? <SuccessLogoCheck replaceScreen={
         () => {
-          navigation.replace("gamebet_screen")
+          navigation.replace("main_screen")
         }
       } /> : <ErrorLogoCross onRetry={() => {
-        navigation.replace("qr_scanner")
+        navigation.replace("main_screen")
       }}/> : <></>
     }
-    </View>
+    </ScrollView>
   )
 }
 const styles = StyleSheet.create({
@@ -574,6 +587,12 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     fontSize: 20,
+  },
+  errorMessage: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
+    fontSize: 16,
   },
   currencySymbol: {
     fontSize: 18,
