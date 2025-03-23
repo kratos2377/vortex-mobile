@@ -10,6 +10,7 @@ export interface PublishUserStakeMutation {
     amount: number;
     session_id: string;
     event_type: string;
+    wallet_key: string;
   }
 
 

@@ -44,7 +44,7 @@ const handleLogout = async () => {
 
     <SafeAreaView style={{ height: imageDim,  width: "100%", alignItems: "center", padding: 5,  margin: 10}}>
     <Avatar.Image
-      source={{uri: `https://robohash.org/necromorph23`}}
+      source={{uri: `https://robohash.org/${user_details.username}`}}
       size={imageDim}
     />
       

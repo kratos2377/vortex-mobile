@@ -3,7 +3,7 @@ import vortex from "@/idl/vortex_contracts.json"
 export const SOLANA_HOST = clusterApiUrl('devnet')
 
 export const STABLE_POOL_PROGRAM_ID = new PublicKey(
-  '8LuB5EV2Dif9kDx61Sca5HCtkHnR5txPzLpAVA34fMWm'
+  '8Wp69Tg8PZw7Acr6DAtroYrkUt4yuvvPd8nWqYD2sJJn'
 )
 
 export const STABLE_POOL_IDL = vortex

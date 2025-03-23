@@ -122,7 +122,8 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
             bet_type: bet_type,
             amount: parseFloat(amount),
             session_id: session_id,
-            event_type: event_type
+            event_type: event_type,
+            wallet_key: selectedAccount!.publicKey.toString()
           })
 
           if(!user_bet_res.result.success) {
@@ -407,7 +408,7 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
               const initUseraGameBetInstruction = await program.methods
               .userBet(game_id_buffer,
                 user_betting_onIdBuffer,
-                 session_id,
+                 session_id_buffer,
                  staked_amount_bn)
                 .accounts({
                     userBet: userGameBetAccountKey,
@@ -416,6 +417,7 @@ const BetScreen = ({ navigation, route }: HomeNavProps<'bet_screen'>) => {
                     gameVault: getGameVaultccountPublicKey(program.programId , game_id_buffer , session_id_buffer),
                     userTokenAccount: userTokenAccount, 
                     userBetWalletKey: selectedAccount!.publicKey,
+                    vortexWallet: VORTEX_WALLET_ADDRESS,
                     rent: SYSVAR_RENT_PUBKEY,
                     systemProgram: anchor.web3.SystemProgram.programId,
                     tokenProgram: TOKEN_PROGRAM_ID

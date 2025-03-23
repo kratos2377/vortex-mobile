@@ -1,6 +1,6 @@
-export const MESSIER_BASE_URL = process.env.MESSIER_BASE_URL || "https://4717-2401-4900-1cba-9045-5a68-e105-e7aa-ec9e.ngrok-free.app"
-export const VORTEX_PUB_SUB_URL = process.env.VORTEX_PUB_SUB_URL || "https://9245-2401-4900-1cba-9045-5a68-e105-e7aa-ec9e.ngrok-free.app"
-export const NEBULA_BASE_URL = process.env.NEBULA_BASE_URL || "https://4717-2401-4900-1cba-9045-5a68-e105-e7aa-ec9e.ngrok-free.app"
+export const MESSIER_BASE_URL = process.env.MESSIER_BASE_URL || "https://7947-2401-4900-1cba-9045-3c80-6b19-d7d6-d426.ngrok-free.app"
+export const VORTEX_PUB_SUB_URL = process.env.VORTEX_PUB_SUB_URL || "https://298e-2401-4900-1cba-9045-3c80-6b19-d7d6-d426.ngrok-free.app"
+export const NEBULA_BASE_URL = process.env.NEBULA_BASE_URL || "https://f451-2401-4900-1cba-9045-3c80-6b19-d7d6-d426.ngrok-free.app"
 
 //group routes
 export const USER_AUTH_ROUTE = "/api/v1/auth"
