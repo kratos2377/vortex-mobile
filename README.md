@@ -1,50 +1,25 @@
-# Welcome to your Expo app 👋
+## Vortex Mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Mobile Client made using React native with Expo. This is used by users to check their bets and stake in other games as well.
+You can connect to any solana wallet like Phantom/Solfare and start staking in staked games.
 
-## Get started
 
-1. Install dependencies
+[Vortex Project Demo](https://drive.google.com/file/d/1lKqdKbO27KRdyTNZOglrE2yBy8Z1vdj7/view?usp=sharing)
 
-   ```bash
-   npm install
-   ```
+[Architecture Design (Lucid Chart)](https://lucid.app/lucidchart/7da583bc-493c-45dc-80b7-34f6002b7646/edit?viewport_loc=-6565%2C-2146%2C8975%2C4355%2C0_0&invitationId=inv_0f90b33d-902f-4d79-b65c-6f4ab7641f46)
 
-2. Start the app
+[Backend Explanantion](https://drive.google.com/file/d/12--pbH0VtOc9j9xJzDhI6pODaHniNMmv/view?usp=sharing) | [Backend Documentation](https://docs.google.com/document/d/107DOYn_nzcd1q9lS5SYgMizIAphoP1elpcuMIHjetso/edit?tab=t.0#heading=h.6n58tp4y15mj)
 
-   ```bash
-    npx expo start
-   ```
+[Messier Documentation](https://docs.google.com/document/d/18qsjmrNxDxH6bXJmC0LRoN6TapAT5TKstKpebk9RJE4/edit?usp=sharing)
 
-In the output, you'll find options to open the app in a
+[Certois Documentation](https://docs.google.com/document/d/1FKJs6ZrbjGZyUOv30M5G_EwZ4nXzrqB6tUREheL1tVw/edit?usp=sharing)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+[Nebula Documentation](https://docs.google.com/document/d/1jqrr5gwWIG-8YOj7Two6TrrLs6TzQGxokGHg3CGkh1g/edit?usp=sharing)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+[Nova Documentation](https://docs.google.com/document/d/1jqrr5gwWIG-8YOj7Two6TrrLs6TzQGxokGHg3CGkh1g/edit?usp=sharing)
 
-## Get a fresh project
+[Vortex-Pub-Sub Documentation](https://docs.google.com/document/d/13zhCaCjqs_i13Ss73w9zLA13vV-fW3iJUVyxdiPnSNo/edit?usp=sharing)
 
-When you're ready, run:
+[Vortex Matchmaker Documentation](https://docs.google.com/document/d/1BG8z9ce1_E4ehz0vYye7lRlKPLs5I8x2yd202_3dZZI/edit?usp=sharing)
 
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+[Executor-Bots Documentation](https://docs.google.com/document/d/14tko74CrxQazaVkszIIJTOo1YrVLAI0EyzBW2aXg9gg/edit?usp=sharing)
